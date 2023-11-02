@@ -1,0 +1,35 @@
+- hosts: web
+  tasks:
+    - name: Install Nginx
+      become: yes
+      apt:
+        update_cache: true
+        name: nginx
+        state: present
+
+    - name: Copy Nginx config files
+      copy:
+        src: /root/slaves/nginx/config/
+        dest: /etc/nginx/
+        force: true
+      notify:
+        - Restart Nginx
+    
+
+    - name: Validate Nginx configuration
+      command: nginx -t
+      
+      
+    - name: Making index.html file
+      template:
+        dest: /var/www/html/index.html
+        src: /root/slaves/nginx/index.html.j2
+      
+    - name: Restart Nginx
+      become: true
+      service:
+        name: nginx
+        state: restarted
+        enabled: true
+      # command:
+      #   cmd: service nginx restart

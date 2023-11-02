@@ -1,0 +1,22 @@
+- hosts: dev_lb
+  tasks:
+    - name: Install HAProxy
+      apt:
+        name: haproxy
+        update_cache: true
+        state: present
+
+    - name: Configure HAProxy 
+      template:
+        dest: /etc/haproxy/haproxy.cfg
+        src: /root/slaves/haproxy/haproxy.cfg.j2
+      notify:
+        - Restart HAProxy
+
+  handlers:
+    - name: Restart HAProxy
+      become: true
+      service:
+        name: haproxy
+        state: restarted
+        enabled: true

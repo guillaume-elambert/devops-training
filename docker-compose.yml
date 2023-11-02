@@ -1,0 +1,70 @@
+version: '3'
+services:
+  master:
+    build:
+      context: .
+      dockerfile: ./master.Dockerfile
+    working_dir: /root/playbooks
+    volumes:
+      - ./master/playbooks:/root/playbooks
+      - ./master/config:/etc/ansible
+      - ./slaves:/root/slaves
+    entrypoint: 
+      - /bin/sh
+      - -c
+      - |
+        tail -f /dev/null
+      # ansible-playbook lamp.yml
+    depends_on:
+      - web
+      - db
+      - lb
+    networks:
+      - web
+      - lb
+      - db
+  
+  lb:
+    build:
+      context: .
+      dockerfile: ./server.Dockerfile
+    depends_on:
+      - db
+    ports: 
+      - 8080:80
+    networks:
+      - lb
+
+  web:
+    build:
+      context: .
+      dockerfile: ./server.Dockerfile
+    deploy:
+      replicas: 5
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+    depends_on:
+      - db
+    networks:
+      - web
+      - lb
+      - db
+
+  db:
+    build:
+      context: .
+      dockerfile: ./server.Dockerfile
+    networks:
+      - db
+
+
+networks:
+  web:
+    driver: bridge
+  lb:
+    driver: bridge
+  db:
+    driver: bridge
+

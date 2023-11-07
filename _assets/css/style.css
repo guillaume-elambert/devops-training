@@ -1,0 +1,227 @@
+html {
+    scroll-behavior: smooth;
+    /* width: 100vw; */
+}
+
+.markdown-section {
+    text-align: justify;
+}
+
+/* Align the <h1/2/3/4/5/6> elements with the little arrow of the details */
+details > summary > h1,
+details > summary > h2,
+details > summary > h3,
+details > summary > h4,
+details > summary > h5,
+details > summary > h6 {
+    display: initial !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    padding-left: 10px !important;
+}
+
+/* Align the elements inside <h1/2/3/4/5/6> elements with the little arrow of the details */
+details > summary > h1 *,
+details > summary > h2 *,
+details > summary > h3 *,
+details > summary > h4 *,
+details > summary > h5 *,
+details > summary > h6 * {
+    display: initial !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+/* Make nicer cursor while hovering a summary */
+details > summary {
+    width: fit-content;
+    cursor: pointer;
+}
+
+
+/* Make a nice style for the navigation items that are based on files */
+.sidebar-nav > ul > li > a,
+.sidebar-nav > ul > li > p > a {
+    font-weight: 700 !important;
+    margin: 0 !important;
+    color: #364149 !important;
+}
+
+.sidebar-nav > ul > li:not(:first-child) {
+    margin-top: 1em !important;
+}
+
+.app-sub-sidebar li:before {
+    content: none;
+}
+
+
+/* Make a subsidiary warn class but for <div> and not <p> */
+.markdown-section div.warn {
+    background: rgba(66, 185, 131, .1);
+    border-radius: 2px;
+    padding: 1rem;
+    margin: 1.2em 0;
+}
+
+.markdown-section div.warn ul {
+    margin: 0;
+}
+
+
+.results-grid {
+    --spacing: 5rem;
+
+    display: grid;
+
+    padding-top: 1rem;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: underline var(--theme-color);
+}
+
+.results-grid > div > p {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+
+.results-grid > div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Make the result grid responsive */
+@media screen and (max-width: 900px) {
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .results-grid > div {
+        padding-bottom: calc(var(--spacing) / 2);
+    }
+
+    .results-grid > div:not(:first-child) {
+        border-top: 1px solid rgba(0, 0, 0, .07);
+        padding-top: calc(var(--spacing) / 2);
+    }
+}
+
+@media screen and (min-width: 901px) {
+    .results-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .results-grid > div:nth-child(2n) {
+        padding-left: calc(var(--spacing) / 2);
+    }
+
+    .results-grid > div:not(:last-child):not(:nth-child(2n)) {
+        padding-right: calc(var(--spacing) / 2);
+        border-right: 1px solid rgba(0, 0, 0, .07);
+    }
+
+    .results-grid > div:nth-child(-n+2):not(:nth-last-child(-n)) {
+        padding-bottom: calc(var(--spacing) / 2);
+        border-bottom: 1px solid rgba(0, 0, 0, .07);
+    }
+
+    .results-grid > div:first-child:nth-last-child(-n+2),
+    .results-grid > div:nth-child(2):last-child {
+        padding-bottom: 0 !important;
+        border-bottom: none !important;
+    }
+
+    /* Make every row except first one having 5px top padding */
+    .results-grid > div:nth-last-child(-n+2):not(:first-child):not(:nth-child(2)) {
+        padding-top: calc(var(--spacing) / 2);
+    }
+
+    /* If the grid is unbalances, do a repartition of the grid column for the last row */
+    .results-grid > div:nth-child(2n+1):nth-last-child(-n+2):last-child {
+        grid-column: 1 / 3;
+    }
+}
+
+
+/* Make all image non-draggable */
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Navbar styling : making the link less ugly on small screen */
+.app-nav > ul {
+    padding-inline-start: 5px;
+}
+
+/* Logo sizing */
+#logo {
+    width: 200px;
+    height: auto;
+
+    /* Set transition for size changes */
+    transition: width 0.5s, height 0.5s;
+}
+
+/* Ensure that the logo is not covering the navbar */
+@media screen and (max-width: 500px) {
+    .cover-main {
+        padding-top: 60px
+    }
+
+    #logo {
+        width: 150px;
+    }
+}
+
+/* Make code inside title about the same size as text */
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+    font-size: smaller;
+}
+
+
+/* Spacer element */
+.spacing {
+    padding-top: 6px;
+}
+
+
+/* Change elements spacing for readability */
+#main h4 {
+    margin-block-end: 0.9em;
+}
+
+#main h5 {
+    margin-block-end: 0.5em;
+}
+
+#main h4 + p,
+#main h5 + p {
+    margin-block-start: 0;
+    margin-top: 0;
+}
+
+#main ul {
+    margin-block-start: 0;
+}
+
+/* Make the paragraph before the ul not having a margin */
+#main p + ul {
+    margin-block-start: -1.2em;
+}
+
+#main a strong {
+    color: var(--theme-color,#42b983);
+}

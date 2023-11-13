@@ -1,6 +1,6 @@
 // Detect Loading finished on Docsify
 // Do not create a new file, just add this code to the existing $docsify object
-let router;
+let questionNumber = 0;
 
 window.$docsify = {
     name: 'Ansible training',
@@ -8,6 +8,10 @@ window.$docsify = {
     coverpage: true,
     loadSidebar: true,
     loadNavbar: true,
+    alias: {
+        '.*/_sidebar.md': '_sidebar.md',
+        '.*/_navbar.md': '_navbar.md'
+    },
     maxLevel: 4,
     subMaxLevel: 4,
     search: {
@@ -25,13 +29,33 @@ window.$docsify = {
         background: "#00000050",
         margin: 50,
     },
+    beforeElements : [
+        {
+            referenceNodeRegexSelector: '^ *< *question *>',
+            htmlToAddBefore: "<div class='question'>\n\n{{nextTitleLevel}} <question-introducer><i class='fa-solid fa-brain'></i>  Question {{questionNumber}}</question-introducer>",
+            whenFounded: function(originalLine, editedLine, currentRoute){
+
+                questionNumber++;
+                editedLine = editedLine.replaceAll('{{questionNumber}}', questionNumber);
+                
+                return editedLine;
+            },
+            afterEveryMatch: function(modifiedMarkdow){
+                questionNumber = 0;
+                lastRoutePath = null;
+            }
+        },
+    ],
     plugins: [
         function (hook, vm) {
-            router = vm;
 
             hook.doneEach(function () {
                 handleUrlPointingToDetails(vm.route.query.id);
                 handleLinksInSummary();
+            });
+
+            hook.beforeEach(function (markdown) {
+                return handleAdditionnalElementsBefore(vm, markdown);
             });
 
             hook.beforeEach(function (markdown) {
@@ -97,6 +121,76 @@ function handleLinksInSummary() {
             details.toggleAttribute('open');
         });
     });
+}
+
+/**
+ * Function to add elements before other elements.
+ * It requires a "beforeElements" object in the Docsify configuration.
+ * The "beforeElements" object is an array of objects. Each of these objects must have the following properties :
+ * - referenceNodeRegexSelector : a query selector that will be used to select the reference nodes
+ * - htmlToAddBefore : the HTML string that will be used to create the new element(s) that will be added before the reference node
+ * - specialHandler : a function that will be called after the new element(s) have been added to the DOM
+ * @param {*} vm The Docsify object
+ * @param string markdown The markdown to parse
+ */
+function handleAdditionnalElementsBefore(vm, markdown){
+    if(!vm || !vm.config?.beforeElements || !markdown || !markdown.trim()) return;
+    
+    let editedMarkdown = "";
+    let lastTitle = null;
+    let lastTitleLevel = null;
+
+    // Iterate over all the elements that should be added before another element
+    vm.config.beforeElements.forEach(function(referenceNodeSelector){
+        if(!referenceNodeSelector.referenceNodeRegexSelector) return;
+
+        // Go through the markdown string and look for the reference node
+        const regex = new RegExp(referenceNodeSelector.referenceNodeRegexSelector, 'g');
+
+        // Copy each line that doesn't match the regex to the editedMarkdown string
+        markdown.split('\n').forEach(function(line){
+
+            if((lastTitle = line.match(/^#+/))){
+                // count the number of # in the title
+                lastTitleLevel = lastTitle[0].length;
+            }
+
+            let modifiedLine = "";
+
+            if(line.match(regex)) {
+                let toAdd = referenceNodeSelector.htmlToAddBefore;
+                
+                // Add lastTitleLevel * '#' to the editedMarkdown
+                if(lastTitleLevel){
+                    toAdd = toAdd.replaceAll('{{nextTitleLevel}}', '#'.repeat(lastTitleLevel + 1)).replaceAll('{{titleLevel}}', '#'.repeat(lastTitleLevel));
+                }
+                
+                // Add the HTML string before the reference node
+                modifiedLine += toAdd + '\n' + line;
+
+                // whenFounded and is called after the new element(s) have been added
+                if(referenceNodeSelector.whenFounded && typeof referenceNodeSelector.whenFounded === 'function'){
+                    modifiedLine = referenceNodeSelector.whenFounded(line, modifiedLine, vm?.route);
+                }
+
+                line = modifiedLine;
+            }
+                        
+            editedMarkdown += line + '\n';
+        });
+
+        markdown = editedMarkdown;
+
+    });
+
+    
+    console.log(markdown);
+    
+    if(vm.config.afterEveryMatch && typeof vm.config.afterEveryMatch === 'function'){
+        markdown = vm.config.afterEveryMatch(markdown);
+    }
+
+    return markdown;
 }
 
 

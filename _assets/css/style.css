@@ -225,3 +225,139 @@ h6 code {
 #main a strong {
     color: var(--theme-color,#42b983);
 }
+
+.docsify-tabs__content table td:last-child,
+.docsify-tabs__content table th:last-child {
+    width: 100%;
+}
+
+#ansible-volumes-table {
+    margin-top: 15px;
+}
+
+#ansible-volumes-table code {
+    margin-left: 0;
+    padding-left: 0;
+    line-height: 2.5
+}
+
+/* Make a table with equivalent columns width */
+.markdown-section table.equalize-columns {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.markdown-section table.equalize-columns tr th,
+.markdown-section table.equalize-columns tr td {
+    width: unset;
+}
+
+.markdown-section tr:nth-child(2n + 1) {
+    background-color: #fff;
+}
+
+/* Improve visibility for questions */
+.markdown-section details.question summary,
+.markdown-section details.question::before,
+.markdown-section details.question::after,
+.markdown-section question-introducer {
+    --question-fontsize: 1.15rem;
+    color: #34495E;
+    font-weight: 600;
+    font-size: var(--question-fontsize, 1.15rem)
+}
+
+.markdown-section question-introducer {
+    display: block;
+    margin: var(--question-fontsize, 1.15rem) 0 10px 0;
+}
+
+.markdown-section question-introducer,
+.markdown-section question-introducer .fa, 
+.markdown-section question-introducer .fa-brands,
+.markdown-section question-introducer .fa-classic,
+.markdown-section question-introducer .fa-duotone,
+.markdown-section question-introducer .fa-light,
+.markdown-section question-introducer .fa-regular,
+.markdown-section question-introducer .fa-sharp,
+.markdown-section question-introducer .fa-sharp-solid,
+.markdown-section question-introducer .fa-solid,
+.markdown-section question-introducer .fa-thin,
+.markdown-section question-introducer .fab,
+.markdown-section question-introducer .fad,
+.markdown-section question-introducer .fal,
+.markdown-section question-introducer .far,
+.markdown-section question-introducer .fas,
+.markdown-section question-introducer .fass,
+.markdown-section question-introducer .fat {
+    line-height: 1.6rem;
+    color: var(--theme-color, #42b983);
+    white-space:pre;
+    
+    -webkit-text-decoration: underline var(--theme-color, #42b983);
+    text-decoration: underline var(--theme-color, #42b983);
+}
+
+/*.markdown-section details.question::before,
+.markdown-section details.question::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    line-height: 1;
+    color: var(--theme-color, #42b983);
+    white-space:pre;
+
+    -webkit-text-decoration: underline var(--theme-color, #42b983);
+    text-decoration: underline var(--theme-color, #42b983);
+}
+
+.markdown-section details.question::before {
+    content: "\f5dc";
+    font-weight: 900;
+    font-family: "Font Awesome 6 Pro";
+    -webkit-font-smoothing: antialiased;
+    display: var(--fa-display,inline-block);
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+}
+
+.markdown-section details.question::after {
+    content : "  Question :";
+    margin-left: var(--question-fontsize, 1.15rem);
+}*/
+
+.markdown-section details.question summary::marker {
+    color: var(--theme-color, #42b983);
+}
+
+.markdown-section details.question summary:hover {
+    -webkit-text-decoration: underline var(--theme-color, #42b983);
+    text-decoration: underline var(--theme-color, #42b983);
+}
+
+
+.sidebar-nav .question-link {
+    white-space: pre;
+}
+
+.sidebar-nav .question-link .fa, 
+.sidebar-nav .question-link .fa-brands,
+.sidebar-nav .question-link .fa-classic,
+.sidebar-nav .question-link .fa-duotone,
+.sidebar-nav .question-link .fa-light,
+.sidebar-nav .question-link .fa-regular,
+.sidebar-nav .question-link .fa-sharp,
+.sidebar-nav .question-link .fa-sharp-solid,
+.sidebar-nav .question-link .fa-solid,
+.sidebar-nav .question-link .fa-thin,
+.sidebar-nav .question-link .fab,
+.sidebar-nav .question-link .fad,
+.sidebar-nav .question-link .fal,
+.sidebar-nav .question-link .far,
+.sidebar-nav .question-link .fas,
+.sidebar-nav .question-link .fass,
+.sidebar-nav .question-link .fat {
+    color: var(--theme-color, #42b983);
+}

@@ -1,4 +1,4 @@
-# Part 1 - Create the architecture
+# Part 1 – Create the architecture
 
 The initial step involves the establishment of an architecture comprising 7 distinct machines using `Docker`:
 - **Ansible machine**: This machine serves as the control node for Ansible, responsible for orchestrating the configuration and management of the entire infrastructure.
@@ -31,8 +31,7 @@ Therefore, we must create one image that includes Ansible, an SSH server, and Py
 To address this challenge, some users have created images that "emulate" systemd commands. For an image based on Ubuntu, we will use the following: [geerlingguy/docker-ubuntu2204-ansible][docker-image]. \
 These images also contain Ansible. To use them, we'll make sure to remove Ansible from the Dockerfile for the load balancer and NGINX server containers.
 
-<question-container>
-  <question>Create the 2 Dockerfiles: one for the Ansible container and another as a standard template for the remaining containers.</question>
+<question-container question="Create the 2 Dockerfiles: one for the Ansible container and another as a standard template for the remaining containers.">
 
 <!-- tabs:start -->
 <!-- tab:Ansible's Dockerfile -->
@@ -284,8 +283,7 @@ To create this architecture, let's break down the problem into three parts:
 
 <!-- TODO: Make everything clearer bellow this -->
 
-<question-container>
-    <question>Use the tables above to create ou will now have to create the <code>docker-compose.yml</code> file.<question>
+<question-container question="Use the tables above to create ou will now have to create the <code>docker-compose.yml</code> file.">
 
 <!-- tabs:start -->
 <!-- tab:Networks -->

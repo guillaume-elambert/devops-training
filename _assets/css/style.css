@@ -270,63 +270,91 @@ h6 code {
 
 .markdown-section question-introducer {
     display: block;
-    margin: var(--question-fontsize, 1.15rem) 0 10px 0;
+    margin-bottom: 10px;
 }
 
-.markdown-section question-introducer,
-.markdown-section question-introducer .fa, 
-.markdown-section question-introducer .fa-brands,
-.markdown-section question-introducer .fa-classic,
-.markdown-section question-introducer .fa-duotone,
-.markdown-section question-introducer .fa-light,
-.markdown-section question-introducer .fa-regular,
-.markdown-section question-introducer .fa-sharp,
-.markdown-section question-introducer .fa-sharp-solid,
-.markdown-section question-introducer .fa-solid,
-.markdown-section question-introducer .fa-thin,
-.markdown-section question-introducer .fab,
-.markdown-section question-introducer .fad,
-.markdown-section question-introducer .fal,
-.markdown-section question-introducer .far,
-.markdown-section question-introducer .fas,
-.markdown-section question-introducer .fass,
-.markdown-section question-introducer .fat {
-    line-height: 1.6rem;
+.sidebar question-introducer .fa, 
+.sidebar question-introducer .fa-brands,
+.sidebar question-introducer .fa-classic,
+.sidebar question-introducer .fa-duotone,
+.sidebar question-introducer .fa-light,
+.sidebar question-introducer .fa-regular,
+.sidebar question-introducer .fa-sharp,
+.sidebar question-introducer .fa-sharp-solid,
+.sidebar question-introducer .fa-solid,
+.sidebar question-introducer .fa-thin,
+.sidebar question-introducer .fab,
+.sidebar question-introducer .fad,
+.sidebar question-introducer .fal,
+.sidebar question-introducer .far,
+.sidebar question-introducer .fas,
+.sidebar question-introducer .fass,
+.sidebar question-introducer .fat {
+    margin-right: 0.5em;
+}
+
+question-container question-introducer,
+question-container question-introducer .fa, 
+question-container question-introducer .fa-brands,
+question-container question-introducer .fa-classic,
+question-container question-introducer .fa-duotone,
+question-container question-introducer .fa-light,
+question-container question-introducer .fa-regular,
+question-container question-introducer .fa-sharp,
+question-container question-introducer .fa-sharp-solid,
+question-container question-introducer .fa-solid,
+question-container question-introducer .fa-thin,
+question-container question-introducer .fab,
+question-container question-introducer .fad,
+question-container question-introducer .fal,
+question-container question-introducer .far,
+question-container question-introducer .fas,
+question-container question-introducer .fass,
+question-container question-introducer .fat {
     color: var(--theme-color, #42b983);
     white-space:pre;
+    line-height: 1.6rem;
     
     -webkit-text-decoration: underline var(--theme-color, #42b983);
     text-decoration: underline var(--theme-color, #42b983);
 }
 
-/*.markdown-section details.question::before,
-.markdown-section details.question::after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    line-height: 1;
-    color: var(--theme-color, #42b983);
-    white-space:pre;
-
-    -webkit-text-decoration: underline var(--theme-color, #42b983);
-    text-decoration: underline var(--theme-color, #42b983);
+question-container {
+    display: block;
+    padding: 12px 24px 12px 30px;
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+    position: relative;
+    background-color: #f8f8f8;
+    border-left: 4px solid var(--theme-color, #42b983);
 }
 
-.markdown-section details.question::before {
+question-container::before {
+
+    background-color: var(--theme-color, #42b983);
+    border-radius: 100%;
+    border-top-left-radius: 100%;
+    border-top-right-radius: 100%;
+    border-bottom-right-radius: 100%;
+    border-bottom-left-radius: 100%;
+    color: #fff;
     content: "\f5dc";
-    font-weight: 900;
     font-family: "Font Awesome 6 Pro";
-    -webkit-font-smoothing: antialiased;
-    display: var(--fa-display,inline-block);
-    font-style: normal;
-    font-variant: normal;
-    text-rendering: auto;
+    font-size: 14px;
+    font-weight: 700;
+    left: -13px;
+    line-height: 22px;
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    text-align: center;
+    top: 14px;
 }
 
-.markdown-section details.question::after {
-    content : "  Question :";
-    margin-left: var(--question-fontsize, 1.15rem);
-}*/
+question-container > *:first-child {
+    margin-top: 0 !important;
+    line-height: 1;
+}
 
 .markdown-section details.question summary::marker {
     color: var(--theme-color, #42b983);
@@ -340,24 +368,4 @@ h6 code {
 
 .sidebar-nav .question-link {
     white-space: pre;
-}
-
-.sidebar-nav .question-link .fa, 
-.sidebar-nav .question-link .fa-brands,
-.sidebar-nav .question-link .fa-classic,
-.sidebar-nav .question-link .fa-duotone,
-.sidebar-nav .question-link .fa-light,
-.sidebar-nav .question-link .fa-regular,
-.sidebar-nav .question-link .fa-sharp,
-.sidebar-nav .question-link .fa-sharp-solid,
-.sidebar-nav .question-link .fa-solid,
-.sidebar-nav .question-link .fa-thin,
-.sidebar-nav .question-link .fab,
-.sidebar-nav .question-link .fad,
-.sidebar-nav .question-link .fal,
-.sidebar-nav .question-link .far,
-.sidebar-nav .question-link .fas,
-.sidebar-nav .question-link .fass,
-.sidebar-nav .question-link .fat {
-    color: var(--theme-color, #42b983);
 }

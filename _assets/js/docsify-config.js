@@ -8,7 +8,6 @@ class QuestionContainer extends HTMLElement {
     constructor() {
         super();
         if(QuestionContainer.previousRoute !== window.location.href){
-            console.log("Reset question number");
             QuestionContainer.questionNumber = 0;
             QuestionContainer.previousRoute = window.location.href;
         }
@@ -18,7 +17,7 @@ class QuestionContainer extends HTMLElement {
         this.questionId = `question-${QuestionContainer.questionNumber}`;
         this.fullQuestionId = window.Docsify.slugify(this.questionId + " " + this.question);
         this.questionTitle = null;
-        this.titleInnerHTML = `<i class='fa-solid fa-brain'></i> Question ${this.questionNumber}:`;
+        this.titleInnerHTML = `Question ${this.questionNumber}:`;
 
         this.beforeChangeTitleSelector = `
             h1[id="${this.fullQuestionId}"],
@@ -52,13 +51,6 @@ class QuestionContainer extends HTMLElement {
             // Set the href of the child link to the fullId
             link.href = `${link.href.substring(0, link.href.indexOf(this.questionId) + this.questionId.length)}`;
         });
-
-        /*const dataIdToQuestion = document.querySelectorAll(`[data-id*="${this.fullQuestionId}"]`);
-
-        dataIdToQuestion.forEach(dataId => {
-            // Set the href of the child link to the fullId
-            dataId.dataset.id = this.questionId;
-        });*/
     }
 
     changeTitle(){
@@ -83,9 +75,10 @@ class QuestionContainer extends HTMLElement {
 
     connectedCallback() {
         this.innerHTML = `
+        <p class="question-text">${this.question}</p>\n\n
         <details class="question">\n\n
-            <summary>\n\n
-                ${this.question}
+            <summary title="Click to expand and see the solution">\n\n
+                Solution :\n\n
             </summary>\n\n
             ${this.innerHTML}
         </details>\n\n
@@ -160,13 +153,17 @@ window.$docsify = {
                 if (vm.route.query.id && vm.route.query.id.match(/question-\d+/)) {
                     element = document.getElementById(vm.route.query.id);
 
-                    if (element) {
-                        const y = element.getBoundingClientRect().top + window.scrollY;
-                        window.scroll({
-                            top: y,
-                            behavior: 'smooth'
-                        });
+                    if(!element) return;
+                    
+                    if (element.parentElement) {
+                        element = element.parentElement;
                     }
+
+                    const y = element.getBoundingClientRect().top + window.scrollY - 10;
+                    window.scroll({
+                        top: y,
+                        behavior: 'smooth'
+                    });
                 }
             });
 

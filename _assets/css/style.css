@@ -258,19 +258,74 @@ h6 code {
 }
 
 /* Improve visibility for questions */
-.markdown-section details.question summary,
-.markdown-section details.question::before,
-.markdown-section details.question::after,
-.markdown-section question-introducer {
+question-container {
+    display: block;
+    padding: 12px 24px 12px 30px;
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+    position: relative;
+    background-color: #f8f8f8;
+    border-left: 4px solid var(--theme-color, #42b983);
+}
+
+question-container::before {
+
+    background-color: var(--theme-color, #42b983);
+    border-radius: 100%;
+    border-top-left-radius: 100%;
+    border-top-right-radius: 100%;
+    border-bottom-right-radius: 100%;
+    border-bottom-left-radius: 100%;
+    color: #fff;
+    content: "\f5dc";
+    font-family: "Font Awesome 6 Pro";
+    font-size: 14px;
+    font-weight: 700;
+    left: -13px;
+    line-height: 22px;
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    text-align: center;
+    top: 14px;
+}
+
+question-container .question-text,
+question-container details.question summary,
+question-container details.question::before,
+question-container details.question::after,
+question-container question-introducer {
     --question-fontsize: 1.15rem;
     color: #34495E;
     font-weight: 600;
     font-size: var(--question-fontsize, 1.15rem)
 }
 
-.markdown-section question-introducer {
+question-container .question-text {
+    margin-top: 0;
+}
+
+question-container details.question summary,
+question-container details.question::before,
+question-container details.question::after {
+    --question-fontsize: 1.15rem;
+    color: #34495E;
+    font-weight: 600;
+    font-size: calc(var(--question-fontsize, 1.15rem) * 0.8)
+}
+
+question-container question-introducer {
     display: block;
     margin-bottom: 10px;
+}
+
+question-container details.question summary::marker {
+    color: var(--theme-color, #42b983);
+}
+
+question-container details.question summary:hover {
+    -webkit-text-decoration: underline var(--theme-color, #42b983);
+    text-decoration: underline var(--theme-color, #42b983);
 }
 
 .sidebar question-introducer .fa, 
@@ -312,43 +367,10 @@ question-container question-introducer .fas,
 question-container question-introducer .fass,
 question-container question-introducer .fat {
     color: var(--theme-color, #42b983);
-    white-space:pre;
     line-height: 1.6rem;
     
     -webkit-text-decoration: underline var(--theme-color, #42b983);
     text-decoration: underline var(--theme-color, #42b983);
-}
-
-question-container {
-    display: block;
-    padding: 12px 24px 12px 30px;
-    border-bottom-right-radius: 2px;
-    border-top-right-radius: 2px;
-    position: relative;
-    background-color: #f8f8f8;
-    border-left: 4px solid var(--theme-color, #42b983);
-}
-
-question-container::before {
-
-    background-color: var(--theme-color, #42b983);
-    border-radius: 100%;
-    border-top-left-radius: 100%;
-    border-top-right-radius: 100%;
-    border-bottom-right-radius: 100%;
-    border-bottom-left-radius: 100%;
-    color: #fff;
-    content: "\f5dc";
-    font-family: "Font Awesome 6 Pro";
-    font-size: 14px;
-    font-weight: 700;
-    left: -13px;
-    line-height: 22px;
-    position: absolute;
-    height: 22px;
-    width: 22px;
-    text-align: center;
-    top: 14px;
 }
 
 question-container > *:first-child {
@@ -356,16 +378,16 @@ question-container > *:first-child {
     line-height: 1;
 }
 
-.markdown-section details.question summary::marker {
-    color: var(--theme-color, #42b983);
-}
-
-.markdown-section details.question summary:hover {
-    -webkit-text-decoration: underline var(--theme-color, #42b983);
-    text-decoration: underline var(--theme-color, #42b983);
+question-container code,
+question-container pre {
+    background-color: #f0f0f0 !important;
 }
 
 
 .sidebar-nav .question-link {
     white-space: pre;
+}
+
+.docsify-tabs__tab {
+    cursor: pointer;
 }

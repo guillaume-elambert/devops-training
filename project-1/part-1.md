@@ -281,15 +281,13 @@ To create this architecture, let's break down the problem into three parts:
 
 ?> As far as I know, exposing ports in Docker Compose is not mandatory but considered a good practice to follow.
 
-<!-- TODO: Make everything clearer bellow this -->
-
-<question-container question="Use the tables above to create ou will now have to create the <code>docker-compose.yml</code> file.">
+<question-container question="Use the tables above to create the <code>docker-compose.yml</code> file.">
 
 <!-- tabs:start -->
 <!-- tab:Networks -->
 As explain in the different tables, we have to create 2 networks for this infrastructure.
-As we don't want the web servers to be accessible directly from the outter world, the 'web' network is set to `bridge`.
-For the same reason, we create the 'lb' network as `bridge`.
+To prevent direct access to the web servers from the outside world, the 'web' network is configured as `bridge`.
+Similarly, the 'lb' network is also created as `bridge`.
 
 [To learn more about network drivers][docker-network-drivers]
 
@@ -303,14 +301,14 @@ networks:
 ```
 
 <!-- tab:Load balancer container -->
-Regarding the load balancer container, we create it using the `server.Dockerfile` we created earlier.
-To make it accessible to the host, we are linking the port 80 of the container (default port for HTTP) to the port 8080 of the host machine. 
+For the load balancer container, we use the `server.Dockerfile` created earlier.
+To enable accessibility from the host, we are linking the port 80 of the container (default port for HTTP) to the port 8080 of the host machine. 
 
-?> I am using the 8080 port because I do have an other web server running on my PC that is using 80 port but you can make it vary so it fits your needs.
+?> I have chosen port 8080 because there is another web server running on my PC using port 80. However, feel free to vary it according to your requirements.
 
-As for network, we attach the container inside of the 'lb' network.
+In terms of networking, we integrate the container into the 'lb' network.
 
-!> Here, I have specified the `depends_on` setting so we ensure the web server containers are up and running before creating this one but it is not mandatory.
+!> I have specified the `depends_on` setting here to ensure the web server containers are operational before creating this one, though it is not obligatory.
 ```yml
 lb:
     build:
@@ -324,12 +322,12 @@ lb:
         - lb
 ```
 <!-- tab:Web server containers -->
-As explained, we are using the same `server.Dockerfile` for the web server and the load balancer containers.
-We do attach the containers to the networks 'web' and 'lb'.
+As mentioned earlier, we employ the same `server.Dockerfile` for both the web server and load balancer containers..
+These web containers are connected to the 'web' and 'lb' networks.
 
-It is the `deploy` setting  that allow us to create multiple containers.
-The `replicas: 5` value, specifies that we want 5 identical containers.
-The `restart_policy` setting is an optionnal configuration to explain to docker compose what to do when a container crashed.
+The `deploy` settings enable the creation of multiple containers..
+The value `replicas: 5`, specifies the desire for 5 identical containers.
+The `restart_policy` setting is an optional configuration, explaining to Docker Compose the desired action when a container crashes.
 
 ```yml
 web:
@@ -347,14 +345,17 @@ web:
         - lb
 ```
 <!-- tab:Ansible container -->
-The 'master' container as I call it, is created using the `master.Dockerfile` file.
-It is attached to both 'web' and 'lb' networks so that it can interract bot all containers using SSH.
-Here I do make docker compose wait it creates the load balancer and web server containers before creating it but as for HAProxy's container configuration, it is optionnal.
+The 'master' container, as I refer to it, is created using the `master.Dockerfile` file.
+It is connected to both the 'web' and 'lb' networks to interact with all containers using SSH.
 
-I am sharing some folders of my PC to the container so I can pass it some data such as Ansible configuration, Ansible playbooks and content that will be deployed to the other containers.
-The `working_dir` setting allow me to specify in which folder the binaries will start. Meaning, for example, that if you open bash and type `pwd`, you will get `/root/playbooks`.
-Now, the `entrypoint` part stands for what the container will do when started. With the current value, the container will send a command to `/bin/sh` which stands for reading an infinite file. 
-In other words: a task that will never ends. I am using this so the container doesn't stop after its creation and so we can then ask Ansible to deploy some stuff to the other containers.
+In this case, I make Docker Compose wait until it creates the load balancer and web server containers before initializing the 'master' container. However, as with the HAProxy container configuration, it is optional.
+
+I am sharing some folders of my PC to the container, enabling the passing of data such as Ansible configuration, Ansible playbooks, and content destined for deployment to other containers.
+
+The `working_dir` setting allows me to specify in which folder the binaries will start. For instance, if you open a bash terminal and type `pwd`, you will get `/root/playbooks`.
+
+Now, the `entrypoint` part determines what the container will do when started. With the current value, the container will send a command to `/bin/sh` which reads an infinite file, essentially a task that never ends.
+I am using this to ensure the container doesn't stop after its creation, allowing us to instruct Ansible to deploy content to other containers.
 
 ```yml
 master:

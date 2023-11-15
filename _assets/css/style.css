@@ -392,3 +392,31 @@ question-container pre {
 .docsify-tabs__tab {
     cursor: pointer;
 }
+
+
+.markdown-section pre {
+    padding: 0;
+}
+
+.markdown-section pre code {
+    padding-left: 1.4rem;
+    padding-right: 1.4rem;
+}
+
+::-webkit-scrollbar {
+    height: 0.5rem;
+    width: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+    --tw-border-opacity: 1;
+    background-color: rgba(197,197,213,.8);
+    border-color: rgba(255,255,255,.8);
+    border-radius: 9999px;
+    border-width: 1px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 9999px;
+}

@@ -101,7 +101,7 @@ window.$docsify = {
         '.*/_navbar.md': '_navbar.md'
     },
     maxLevel: 4,
-    subMaxLevel: 4,
+    subMaxLevel: 5,
     search: {
         noData: 'No results!',
         paths: 'auto',

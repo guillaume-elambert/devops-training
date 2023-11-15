@@ -266,6 +266,7 @@ question-container {
     position: relative;
     background-color: #f8f8f8;
     border-left: 4px solid var(--theme-color, #42b983);
+    margin: 40px 0 0.6rem;
 }
 
 question-container::before {

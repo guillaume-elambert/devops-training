@@ -150,12 +150,12 @@ window.$docsify = {
 
             hook.ready(function () {
                 // If the url contains a path parameter to a specific id, scroll to the element with the corresponding id
-                if (vm.route.query.id && vm.route.query.id.match(/question-\d+/)) {
+                if (vm?.route?.query?.id){
                     element = document.getElementById(vm.route.query.id);
 
                     if(!element) return;
                     
-                    if (element.parentElement) {
+                    if (vm.route.query.id.match(/question-\d+/) && element.parentElement) {
                         element = element.parentElement;
                     }
 

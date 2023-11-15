@@ -208,7 +208,7 @@ To create this architecture, let's break down the problem into three parts:
 </table>
 
 <!-- tab:Ansible container -->
-<table>
+<table id="ansible-container-explanation">
     <tr>
         <th>Image</th>
         <td>
@@ -437,9 +437,45 @@ networks:
 </question-container>
 
 
+<br>
+
+
+## Create file architecture
+
+As specified in the [table containing explanation on how to create the Ansible container][ansible-container-explanation], we have to set up a well-structured file architecture. This ensures that the Ansible container has dedicated folders for its configuration and all the components it will deploy across various servers.
+
+Refering to the [table][ansible-container-explanation], we have to create the following folders :
+- `./master/config/`
+- `./master/playbooks/`
+- `./slaves/`
+
+With these modifications, you should have a file architecture like this:
+```treeview
+./
+|-- docker-compose.yml*
+|-- master/
+|   |-- config/
+|   `-- playbooks/
+|-- master.Dockerfile*
+|-- server.Dockerfile*
+`-- slaves/
+```
+
+
+<br>
+
+
+## Run the architecture
+
+The first part is complete, and the infrastructure is now prepared to handle the project. \
+Technically, you still need to get it running using the command `docker compose -f docker-compose.yml up -d`. \
+Once that done and the Docker Compose infrastructure up and running, let's continue.
+
+
 [docker-hub]: https://hub.docker.com/
 [ansible-introduction]: what-is-ansible/
 [service-module]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/service_module.html
 [docker-image]: https://hub.docker.com/r/geerlingguy/docker-ubuntu2204-ansible
 [architecture-pt1]: _assets/media/ansible-training-pt1.svg
 [docker-network-drivers]: https://docs.docker.com/network/drivers/
+[ansible-container-explanation]: project-1/part-1?id=ansible-container-explanation

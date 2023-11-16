@@ -249,7 +249,7 @@ To understand where NGINX looks for HTML documents on Ubuntu, you can review  [t
 
 <br>
 
-?> **<ins>Reminder:</ins>** the list of Ansible modules is available [here][ansible-modules].
+?> **<ins>Reminder:</ins>** The list of Ansible modules is available [here][ansible-modules].
 
 ?> **<ins>Hint:</ins>** For the next question, we won't follow the instructions outlined in the [official beginners guide of NGINX][nginx-beginners-guide]. Instead, we will use the standard way with `systemctl`.
 
@@ -291,10 +291,10 @@ In the following configuration, the task involves restarting the server with `su
 
 <br>
 
-Now the NGINX playbook is done. \
-To test it, you can use the following commands :
-1. **<ins>Run the playbook:</ins>** `docker compose exec master ansible-playbook nginx.yml` (if you have errors, add the following options at the end of the command toi help you debugging `-vvv --diff`)
-2. **<ins>Check that NGINX is running:</ins>** `docker compose exec web service nginx status`
+The NGINX playbook is now complete. \
+To test it, follow these steps:
+1. **<ins>Run the playbook:</ins>** Run the command `docker compose exec master ansible-playbook nginx.yml`. If you encounter errors, consider adding the following options at the end of the command for debugging: `-vvv --diff`.
+2. **<ins>Check NGINX status:</ins>** Use the command `docker compose exec web service nginx status` to confirm that NGINX is running.
 
 
 

@@ -19,7 +19,7 @@ Red Hat acquired Ansible in 2015 and has developed a number of products around i
 
 ## Architecture: simplicity and portability with SSH and Python
 
-![](_assets/images/ansible_overview.jpg)
+![](../_assets/images/ansible_overview.jpg)
 
 !> Ansible is **agentless**, meaning it doesn't require any specific service/daemon on the machines to be configured.
 

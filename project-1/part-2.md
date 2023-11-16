@@ -164,7 +164,7 @@ Let's proceed task by task :
 ```yml
 - hosts: web
   tasks:
-    - name: Install Nginx
+    - name: Install NGINX
       become: yes
       apt:
         update_cache: true
@@ -174,6 +174,7 @@ Let's proceed task by task :
 
 </question-container>
 
+<br>
 
 <question-container question="Edit the <code>./master/playbooks/nginx.yml</code> file so it copies the content of the <code>./slaves/nginx/config/</code> folder into the NGINX configuration directory.">
 
@@ -225,14 +226,14 @@ To understand where NGINX looks for HTML documents on Ubuntu, you can review  [t
 ```yml
 - hosts: web
   tasks:
-    - name: Install Nginx
+    - name: Install NGINX
       become: yes
       apt:
         update_cache: true
         name: nginx
         state: present
 
-    - name: Copy Nginx config files
+    - name: Copy NGINX config files
       copy:
         src: /root/slaves/nginx/config/
         dest: /etc/nginx/
@@ -246,6 +247,56 @@ To understand where NGINX looks for HTML documents on Ubuntu, you can review  [t
 
 </question-container>
 
+<br>
+
+?> **<ins>Reminder:</ins>** the list of Ansible modules is available [here][ansible-modules].
+
+?> **<ins>Hint:</ins>** For the next question, we won't follow the instructions outlined in the [official beginners guide of NGINX][nginx-beginners-guide]. Instead, we will use the standard way with `systemctl`.
+
+<question-container question="Identify the Ansible module that will help us start the NGINX server, then add the corresponding task to the <code>./master/playbooks/nginx.yml</code> playbook.">
+
+If you've been attentive, I already provided the solution in the [Creating the Dockerfiles][creating-the-dockerfiles] section of the first project part: we will use the [service module][service-module].\
+In the following configuration, the task involves restarting the server with `sudo` privileges.
+
+```yml
+- hosts: web
+  tasks:
+    - name: Install NGINX
+      become: yes
+      apt:
+        update_cache: true
+        name: nginx
+        state: present
+
+    - name: Copy NGINX config files
+      copy:
+        src: /root/slaves/nginx/config/
+        dest: /etc/nginx/
+        force: true      
+
+    - name: Making index.html file
+      template:
+        src: /root/slaves/nginx/index.html.j2
+        dest: /var/www/html/index.html
+
+    - name: Restart NGINX
+      become: true
+      service:
+        name: nginx
+        state: restarted
+        enabled: true
+```
+
+</question-container>
+
+<br>
+
+Now the NGINX playbook is done. \
+To test it, you can use the following commands :
+1. **<ins>Run the playbook:</ins>** `docker compose exec master ansible-playbook nginx.yml` (if you have errors, add the following options at the end of the command toi help you debugging `-vvv --diff`)
+2. **<ins>Check that NGINX is running:</ins>** `docker compose exec web service nginx status`
+
+
 
 [ansible-inventory]: https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html
 [docker-ps]: https://docs.docker.com/engine/reference/commandline/docker/
@@ -256,3 +307,5 @@ To understand where NGINX looks for HTML documents on Ubuntu, you can review  [t
 [template-module-guide]: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_templating.html
 [template-module]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html
 [nginx-ubuntu-html]: https://ubuntu.com/tutorials/install-and-configure-nginx
+[creating-the-dockerfiles]: project-1/part-1?id=creating-the-dockerfiles
+[service-module]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/service_module.html

@@ -483,3 +483,66 @@ question-container pre {
     width: 0.5em;
     height: 2px;
 }
+
+.sidebar-nav {
+    --transition-duration: 0.2s;
+}
+
+.sidebar ul li a {
+    text-decoration-color: var(--theme-color, #42b983) !important;
+}
+
+.sidebar-nav ul.app-sub-sidebar {
+    position: relative;
+    margin-left: 0;
+    padding-left: 15px;
+    transition: all var(--transition-duration);
+}
+.sidebar-nav ul.app-sub-sidebar::before,
+.sidebar-nav ul.app-sub-sidebar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    background-color: var(--theme-color, #42b983);
+}
+
+/* Create a line on side of "sub tree" in sidebar */
+.sidebar-nav ul.app-sub-sidebar::before {
+    top: -0.5em;
+    bottom: 0;
+    width: 1px;
+    transition: all var(--transition-duration);
+}
+
+.sidebar-nav ul.app-sub-sidebar::after {
+    bottom: 0;
+    height: 1px;
+    width: 0;
+    transition: all var(--transition-duration);
+}
+
+.sidebar-nav li:has(+ ul.app-sub-sidebar > li a:hover):not(:has(+ ul.app-sub-sidebar > ul.app-sub-sidebar)) a {
+    text-decoration: underline;    
+    text-decoration-thickness: 2px;
+}
+
+/* Make everything more visible when hovering the elements */
+.sidebar-nav li:has(a:hover) + ul.app-sub-sidebar::before,
+.sidebar-nav ul.app-sub-sidebar:has(> li a:hover):not(:has(> ul.app-sub-sidebar))::before,
+.sidebar-nav li > a:hover + ul.app-sub-sidebar::before {
+    top: -1em;
+    width: 2px;
+}
+
+.sidebar-nav li:has(+ ul.app-sub-sidebar) a,
+.sidebar-nav li:has(> ul.app-sub-sidebar) > a  {
+    /* Set 2px underline */
+    text-decoration-thickness: 2px;
+}
+
+.sidebar-nav li:has(a:hover) + ul.app-sub-sidebar::after,
+.sidebar-nav ul.app-sub-sidebar:has(> li a:hover):not(:has(> ul.app-sub-sidebar))::after,
+.sidebar-nav li > a:hover + ul.app-sub-sidebar::after {
+    width: 0.5em;
+    height: 2px;
+}

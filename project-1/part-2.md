@@ -66,7 +66,7 @@ Groups are used to classify hosts either for distinct configuration purposes or 
 
 Considering the simplicity of our project, we'll define only three groups:
 
-| Goup  |       Servers       |
+| Group |       Servers       |
 | :---: | :-----------------: |
 | `web` |    `*-lb-[0-9]+`    |
 | `lb`  |      `*-lb-1`       |
@@ -95,11 +95,164 @@ The concept of `[all:children]` enables the creation of a group comprising the c
 </question-container>
 
 
+<br>
 
-## Deploy NGinx servers
 
-Let's start by creating the playbook to deploy the NGinx servers.
+### Ansible configuration
+
+The main Ansible configuration is within [the `ansible.cfg` file][ansible-cfg]. \
+Refering to the [official documentation][ansible-cfg] you can either create a file from scratch or generate a template file using the command:
+```bash
+$ ansible-config init --disabled > ansible.cfg
+```
+
+In our case, Ansible is not installed on the PC; it resides within the `master` container.
+While you can generate the configuration file form the container and retrieve its content to copy/paste on your PC, extensive Ansible configuration is unnecessary for our project.
+
+Two specific configurations need attention in our project:
+1. Disable SSH key exchange:</ins>
+   - In this initial hands-on experience with Ansible, security standards are not our primary concern.
+   - Docker Compose is used to deploy servers, and containers have a short lifespan, making it impractical to implement strict SSH key exchange settings.
+2. <ins>Specify the user to use when connecting using SSH:</ins> \
+   Since the same image is used for all containers, and the `root` user is specified in its `server.Dockerfile`, uniformity is maintained across all containers. This enables us to establish a universal SSH user for Ansible.
+
+
+<question-container question="Use the official documentation to configure the <code>ansible.cfg</code> file.">
+
+As explained above, there are two parameters to configure:
+
+|     Paramater     | Description                                                                               |
+| :---------------: | :---------------------------------------------------------------------------------------- |
+| host_key_checking | Enables host key checking by the underlying tools Ansible uses to connect to the targets. |
+|    remote_user    | Sets the login user for the target machines.                                              |
+
+<br>
+
+The resulting content for the `./master/config/ansible.cfg` file :
+```ini
+[defaults]
+host_key_checking = false
+remote_user = root
+```
+
+</question-container>
+
+
+<br>
+
+## Creatings the playbooks
+
+
+### NGINX playbook
+
+Let's start by creating the playbook to deploy the NGINX servers.
+
+First of all, we need to determine on which `hosts` we want the playbook to run: the `web` group defined in the inventory at the [Question 2][question-2]. \
+Then we have to think about the tasks we want to execute :
+1. Install NGINX using `apt`
+2. Configure NGINX
+3. Add web application to the server
+4. Start the NGINX server
+
+Hopefully, we do not have to do every thing manually since Ansible uses 'modules' to help us interract with the remote servers. \
+Each module does a simple task on the remote server. You can find a [list of most of available modules in the official documentation][ansible-modules].
+
+Let's proceed task by task :
+
+<question-container question="Create the <code>./master/playbooks/nginx.yml</code> file and use the <code>apt</code> module to install NGINX.">
+
+```yml
+- hosts: web
+  tasks:
+    - name: Install Nginx
+      become: yes
+      apt:
+        update_cache: true
+        name: nginx
+        state: present
+```
+
+</question-container>
+
+
+<question-container question="Edit the <code>./master/playbooks/nginx.yml</code> file so it copies the content of the <code>./slaves/nginx/config/</code> folder into the NGINX configuration directory.">
+
+According to the [NGINX Beginner’s Guide][nginx-beginners-guide], the configuration folder of NGINX depends on the package system used to install NGINX and the operating system. \
+After some Googling and some research in the file system, it apperas that using `apt` in Ubuntu (the base of our container image), the configuration folder is `/etc/nginx/`.
+
+```yml
+- hosts: web
+  tasks:
+    - name: Install NGINX
+      become: yes
+      apt:
+        update_cache: true
+        name: nginx
+        state: present
+
+    - name: Copy NGINX config files
+      copy:
+        src: /root/slaves/nginx/config/
+        dest: /etc/nginx/
+        force: true
+```
+
+</question-container>
+
+
+<br>
+
+
+Before writting the next task, we need to focus on the [template module][template-module-guide]. \
+This module uses Jinja2 templating to create dynamic files. In our case, we will create a simple `index.html` file on each NGINX server that will show the name of the server. \
+As this is a bit technical and is not the main purpose of the project, I give you the response on how to create the template file :
+1. On your PC, create a file named `index.html.j2` in the folder `./slaves/nginx/`
+2. Copy and paste this line to the file : `Hello! You are connected to {{ inventory_hostname }}.`
+
+Once the file processed by Ansible, the placeholder `{{ inventory_hostname }}` will be replaced by the name of the container it is deployed on. \
+So, in my case :
+1. `Hello! You are connected to ansible-web-1.`
+2. `Hello! You are connected to ansible-web-2.`
+3. `Hello! You are connected to ansible-web-3.`
+4. `Hello! You are connected to ansible-web-4.`
+5. `Hello! You are connected to ansible-web-5.`
+
+For further guidance, consult [the template module guide][template-module-guide] or refer to [the official template module documentation][template-module]. \
+To understand where NGINX looks for HTML documents on Ubuntu, you can review  [this tutorial from ubuntu.com][nginx-ubuntu-html].
+
+<question-container question="Edit the <code>./master/playbooks/nginx.yml</code> file so it creates the <code>index.html</code> using the <code>index.html.j2</code> template created above.">
+
+```yml
+- hosts: web
+  tasks:
+    - name: Install Nginx
+      become: yes
+      apt:
+        update_cache: true
+        name: nginx
+        state: present
+
+    - name: Copy Nginx config files
+      copy:
+        src: /root/slaves/nginx/config/
+        dest: /etc/nginx/
+        force: true      
+
+    - name: Making index.html file
+      template:
+        src: /root/slaves/nginx/index.html.j2
+        dest: /var/www/html/index.html
+```
+
+</question-container>
 
 
 [ansible-inventory]: https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html
 [docker-ps]: https://docs.docker.com/engine/reference/commandline/docker/
+[ansible-cfg]: https://docs.ansible.com/ansible/latest/reference_appendices/config.html
+[question-2]: project-1/part-2?id=question-2
+[ansible-modules]: https://docs.ansible.com/ansible/latest/collections/index_module.html
+[nginx-beginners-guide]: https://nginx.org/en/docs/beginners_guide.html
+[template-module-guide]: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_templating.html
+[template-module]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html
+[nginx-ubuntu-html]: https://ubuntu.com/tutorials/install-and-configure-nginx

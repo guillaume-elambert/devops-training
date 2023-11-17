@@ -98,6 +98,46 @@ The concept of `[all:children]` enables the creation of a group comprising the c
 
 </question-container>
 
+<br>
+
+Now that we have told Ansible about all the servers it can access, the next step is to specify how it will access them - specifically, which user and password to use.
+To accomplish this, we will utilize variables within the inventory.
+There are two ways to define these variables:
+1. Create a variable to a specific host.
+2. Assign a variable to all the hosts of a group
+
+Given that the **same image is used for all containers**, and the `root` user is specified in its `server.Dockerfile` with the password `ansible`, **uniformity is maintained across all containers**.
+This allows us to **establish a universal SSH user and password** for all the hosts. 
+To accomplish this, we will use the second method for defining variables - assigning variables to a group.
+
+?> For information on how to declare variables, consult the [official documentation][ansible-inventory].
+
+?> To determine which variables to declare, while there is no specific documentation, you can easily find relevant information through online searches.
+
+<question-container question="Edit the <code>hosts.ini</code> file to add variables specifying the user and password to use when Ansible connects through SSH to the servers.">
+
+```ini
+[lb]
+ansible-training-lb-1
+
+[web]
+ansible-training-web-1
+ansible-training-web-2
+ansible-training-web-3
+ansible-training-web-4
+ansible-training-web-5
+
+[all:children]
+web
+lb
+
+[all:vars]
+ansible_ssh_user=root
+ansible_ssh_pass=ansible
+```
+
+</question-container>
+
 
 <br>
 
@@ -110,25 +150,19 @@ Refering to the [official documentation][ansible-cfg] you can either create a fi
 $ ansible-config init --disabled > ansible.cfg
 ```
 
-In our case, Ansible is not installed on the PC; it resides within the `master` container.
+In our case, Ansible is not installed on the PC; it resides within the `master` container. \
 While you can generate the configuration file form the container and retrieve its content to copy/paste on your PC, extensive Ansible configuration is unnecessary for our project.
 
-Two specific configurations need attention in our project:
-1. Disable SSH key exchange:</ins>
-   - In this initial hands-on experience with Ansible, security standards are not our primary concern.
-   - Docker Compose is used to deploy servers, and containers have a short lifespan, making it impractical to implement strict SSH key exchange settings.
-2. <ins>Specify the user to use when connecting using SSH:</ins> \
-   Since the same image is used for all containers, and the `root` user is specified in its `server.Dockerfile`, uniformity is maintained across all containers. This enables us to establish a universal SSH user for Ansible.
+Given the simplicity of our project, there isn't much to specify in the configuration. The only essential task is to **disable SSH key check** between Ansible and the hosts; otherwise, Ansible won't connect to the servers at all.
+Setting up a key for the `master` container and registering it in the `.ssh/known_hosts` file of each host would be time-consuming for an initial hands-on experience with Ansible, where security standards are not our primary concern.
+
+?> **<ins>Reminder:</ins>** The list of all available Ansible settings is accessible [here][ansible-cfg].
 
 
 <question-container question="Use the official documentation to configure the <code>ansible.cfg</code> file.">
 
-As explained above, there are two parameters to configure:
-
-|     Paramater     | Description                                                                               |
-| :---------------: | :---------------------------------------------------------------------------------------- |
-| host_key_checking | Enables host key checking by the underlying tools Ansible uses to connect to the targets. |
-|    remote_user    | Sets the login user for the target machines.                                              |
+As explained in the [official documentation][ansible-cfg], the parameter `host_key_checking` does the following : 
+> Enables host key checking by the underlying tools Ansible uses to connect to the targets.
 
 <br>
 
@@ -140,6 +174,9 @@ remote_user = root
 ```
 
 </question-container>
+
+
+In the solution given above we do specify to Ansible which user to use when connecting through SSH to the servers but not the password. To by pass this issue, we will have to edit the inventory.
 
 
 <br>

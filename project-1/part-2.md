@@ -289,13 +289,21 @@ In the following configuration, the task involves restarting the server with `su
 
 </question-container>
 
-<br>
+#### Testing
 
 The NGINX playbook is now complete. \
 To test it, follow these steps:
 1. **<ins>Run the playbook:</ins>** Run the command `docker compose exec master ansible-playbook nginx.yml`. If you encounter errors, consider adding the following options at the end of the command for debugging: `-vvv --diff`.
 2. **<ins>Check NGINX status:</ins>** Use the command `docker compose exec web service nginx status` to confirm that NGINX is running.
 
+Unfortunately, due to the separation of our web servers from the host machine network in our  `docker-compose.yml` file, we cannot access the NGINX servers from our web browser. \
+Fortunatly, the `master` container has access to them, allowing us to use `curl` to check that everything is working as expected. Use the following command to check the `index.html` file served by NGINX servers :
+```bash
+# Get the 'index.html' file deployed on the 'ansible-web-1' container
+$ docker composer exec master curl ansible-web-1
+
+Hello! You are connected to ansible-web-1.
+```
 
 
 [ansible-inventory]: https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html

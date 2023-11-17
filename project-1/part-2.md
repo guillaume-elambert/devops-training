@@ -36,18 +36,18 @@ $ docker ps -a
 ```
 
 In the output, locate the containers with the names: `*-web-[0-9]+` and `*-lb-1`. \
-In my case, it is `ansible-web-[0-9]+` and `ansible-lb-1`:
+In my case, it is `ansible-training-web-[0-9]+` and `ansible-training-lb-1`:
 ```bash
 $ docker ps -a
 
 CONTAINER ID   IMAGE            COMMAND                  CREATED       STATUS                     PORTS                                   NAMES
-94a6be75089f   ansible-master   "/bin/sh -c 'tail -f…"   12 days ago   Exited (255) 12 days ago                                           ansible-master-1
-13573728ca5c   ansible-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-web-3
-6eb59a8a9e48   ansible-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-web-4
-a1711121adfb   ansible-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-web-2
-b3c893158517   ansible-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-web-5
-71b5199a0ed8   ansible-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-web-1
-d0940852b78a   ansible-lb       "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago   0.0.0.0:8080->80/tcp, :::8080->80/tcp   ansible-lb-1
+94a6be75089f   ansible-training-master   "/bin/sh -c 'tail -f…"   12 days ago   Exited (255) 12 days ago                                           ansible-training-master-1
+13573728ca5c   ansible-training-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-training-web-3
+6eb59a8a9e48   ansible-training-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-training-web-4
+a1711121adfb   ansible-training-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-training-web-2
+b3c893158517   ansible-training-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-training-web-5
+71b5199a0ed8   ansible-training-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-training-web-1
+d0940852b78a   ansible-training-lb       "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago   0.0.0.0:8080->80/tcp, :::8080->80/tcp   ansible-training-lb-1
 ```
 
 </question-container>
@@ -76,14 +76,14 @@ Considering the simplicity of our project, we'll define only three groups:
 
 ```ini
 [lb]
-ansible-lb-1
+ansible-training-lb-1
 
 [web]
-ansible-web-1
-ansible-web-2
-ansible-web-3
-ansible-web-4
-ansible-web-5
+ansible-training-web-1
+ansible-training-web-2
+ansible-training-web-3
+ansible-training-web-4
+ansible-training-web-5
 
 [all:children]
 web
@@ -212,11 +212,11 @@ As this is a bit technical and is not the main purpose of the project, I give yo
 
 Once the file processed by Ansible, the placeholder `{{ inventory_hostname }}` will be replaced by the name of the container it is deployed on. \
 So, in my case :
-1. `Hello! You are connected to ansible-web-1.`
-2. `Hello! You are connected to ansible-web-2.`
-3. `Hello! You are connected to ansible-web-3.`
-4. `Hello! You are connected to ansible-web-4.`
-5. `Hello! You are connected to ansible-web-5.`
+1. `Hello! You are connected to ansible-training-web-1.`
+2. `Hello! You are connected to ansible-training-web-2.`
+3. `Hello! You are connected to ansible-training-web-3.`
+4. `Hello! You are connected to ansible-training-web-4.`
+5. `Hello! You are connected to ansible-training-web-5.`
 
 For further guidance, consult [the template module guide][template-module-guide] or refer to [the official template module documentation][template-module]. \
 To understand where NGINX looks for HTML documents on Ubuntu, you can review  [this tutorial from ubuntu.com][nginx-ubuntu-html].
@@ -299,10 +299,10 @@ To test it, follow these steps:
 Unfortunately, due to the separation of our web servers from the host machine network in our  `docker-compose.yml` file, we cannot access the NGINX servers from our web browser. \
 Fortunatly, the `master` container has access to them, allowing us to use `curl` to check that everything is working as expected. Use the following command to check the `index.html` file served by NGINX servers :
 ```bash
-# Get the 'index.html' file deployed on the 'ansible-web-1' container
-$ docker composer exec master curl ansible-web-1
+# Get the 'index.html' file deployed on the 'ansible-training-web-1' container
+$ docker composer exec master curl ansible-training-web-1
 
-Hello! You are connected to ansible-web-1.
+Hello! You are connected to ansible-training-web-1.
 ```
 
 

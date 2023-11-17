@@ -35,7 +35,11 @@ $ docker ps
 $ docker ps -a
 ```
 
-In the output, locate the containers with the names: `*-web-[0-9]+` and `*-lb-1`. \
+In the output, locate the containers with the names: `*-web-[0-9]+` and `*-lb-1`.
+
+?> The nomenclature of the containers is contingent on the name of the folder housing the  `docker-compose.yml` file. \
+For instance, if the folder is named `awesome-training`and two replicas of a service named `awesomeservice` are created the resulting containers will be named `awesome-training-awesomeservice-1` and `awesome-training-awesomeservice-2`.
+
 In my case, it is `ansible-training-web-[0-9]+` and `ansible-training-lb-1`:
 ```bash
 $ docker ps -a

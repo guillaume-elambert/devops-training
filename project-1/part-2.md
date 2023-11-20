@@ -181,7 +181,7 @@ In the solution given above we do specify to Ansible which user to use when conn
 
 <br>
 
-## Creatings the playbooks
+## Creating playbooks
 
 
 ### NGINX playbook

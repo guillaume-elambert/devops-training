@@ -347,6 +347,365 @@ Hello! You are connected to ansible-training-web-1.
 ```
 
 
+<br>
+
+
+### HAProxy playbook
+
+Now that we have created the Ansible playbook to deploy NGINX servers, it is time to do the same with HAProxy. \
+This playbook will be shorter than the one above.
+
+The first thing to start with is to install the HAProxy server using the `apt` module :
+
+
+<question-container question="Create the <code>./master/playbooks/haproxy.yml</code> file and use the <code>apt</code> module to install HAProxy.">
+
+```yml
+- hosts: dev_lb
+  tasks:
+    - name: Install HAProxy
+      apt:
+        name: haproxy
+        update_cache: true
+        state: present
+```
+
+</question-container>
+
+
+The next step is to configure the HAProxy server.
+
+<details>
+<summary>To create the HAProxy configuration template using Jinja2 and Ansible, we will use the following file as a starting point.</summary>
+
+```haproxy.cfg
+#---------------------------------------------------------------------
+# Example configuration for a possible web application.  See the
+# full configuration options online.
+#
+#   https://www.haproxy.org/download/1.8/doc/configuration.txt
+#
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    # to have these messages end up in /var/log/haproxy.log you will
+    # need to:
+    #
+    # 1) configure syslog to accept network log events.  This is done
+    #    by adding the '-r' option to the SYSLOGD_OPTIONS in
+    #    /etc/sysconfig/syslog
+    #
+    # 2) configure local2 events to go to the /var/log/haproxy.log
+    #   file. A line like the following can be added to
+    #   /etc/sysconfig/syslog
+    #
+    #    local2.*                       /var/log/haproxy.log
+    #
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+    # utilize system-wide crypto-policies
+    ssl-default-bind-ciphers PROFILE=SYSTEM
+    ssl-default-server-ciphers PROFILE=SYSTEM
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+
+#---------------------------------------------------------------------
+# main frontend which proxys to the backends
+#---------------------------------------------------------------------
+frontend main 
+    bind                        *:5000
+    default_backend             app
+
+#---------------------------------------------------------------------
+# round robin balancing between the various backends
+#---------------------------------------------------------------------
+backend app
+    balance     roundrobin
+    server  app1 127.0.0.1:5001 check
+    server  app2 127.0.0.1:5002 check
+    server  app3 127.0.0.1:5003 check
+    server  app4 127.0.0.1:5004 check
+```
+</details>
+
+
+The two sections relevant to us in the provided file are the last two.
+
+The main `frontend which proxies to the backends` part enables us to specify the port used by HAProxy and define the default backend fallback.
+
+The final section pertains to the configuration of the backend. Here, we can instruct HAProxy on which servers to load balance when users try to access the `app` backend.
+
+Before moving on to configuring haproxy, we're going to add a variable to Ansible's configuration to allow us to easily modify the port dedicated to the proxy. We'll call this variable `haproxy_port`.
+Now we need from Ansible that it declares the port depending on a variable you will declare in Ansible : the `haproxy_port` variable.
+
+<question-container question="Edit the Ansible inventory to declare the <code>haproxy_port</code> variable. Set the value to <code>8080</code>.">
+
+```ini
+[lb]
+ansible-training-lb-1
+
+[web]
+ansible-training-web-1
+ansible-training-web-2
+ansible-training-web-3
+ansible-training-web-4
+ansible-training-web-5
+
+[all:children]
+web
+lb
+
+[all:vars]
+ansible_ssh_user=root
+ansible_ssh_pass=ansible
+haproxy_port=8080
+```
+
+</question-container>
+
+Now that we have defined the `haproxy_port` variable it is time to create the `haproxy.cfg.j2` file and integrate the variable into it. \
+The file `haproxy.cfg.j2` should be created within the folder `./slaves/haproxy`
+
+To do so, you can refer to [the template module guide from Ansible][template-module-guide]. It gives you useful links, including [documentation about variables][ansible-variables], [the list of available facts and variables][ansible-facts], [the list of available special variables][ansible-special-variables] and [the Jinja2 documentation][jinja-template-documentation].
+
+
+<question-container question="Copy the provided HAProxy configuration and adapt it to use the <code>haproxy_port</code> variable to define the port used by HAProxy.">
+
+Thanks to the following configuration, we set the port used by HAProxy using the Ansible inventory. \
+Details about the servers will be defined in the following question.
+
+```haproxy.cfg
+#---------------------------------------------------------------------
+# Example configuration for a possible web application.  See the
+# full configuration options online.
+#
+#   https://www.haproxy.org/download/1.8/doc/configuration.txt
+#
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    # to have these messages end up in /var/log/haproxy.log you will
+    # need to:
+    #
+    # 1) configure syslog to accept network log events.  This is done
+    #    by adding the '-r' option to the SYSLOGD_OPTIONS in
+    #    /etc/sysconfig/syslog
+    #
+    # 2) configure local2 events to go to the /var/log/haproxy.log
+    #   file. A line like the following can be added to
+    #   /etc/sysconfig/syslog
+    #
+    #    local2.*                       /var/log/haproxy.log
+    #
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+    # utilize system-wide crypto-policies
+    ssl-default-bind-ciphers PROFILE=SYSTEM
+    ssl-default-server-ciphers PROFILE=SYSTEM
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+
+#---------------------------------------------------------------------
+# main frontend which proxys to the backends
+#---------------------------------------------------------------------
+frontend main 
+    bind                        *:{{ haproxy_port }}
+    default_backend             app
+
+#---------------------------------------------------------------------
+# round robin balancing between the various backends
+#---------------------------------------------------------------------
+backend app
+    balance     roundrobin
+    server  app1 127.0.0.1:5001 check
+    server  app2 127.0.0.1:5002 check
+    server  app3 127.0.0.1:5003 check
+    server  app4 127.0.0.1:5004 check
+```
+
+</question-container>
+
+The final step in configuring HAProxy is to instruct Ansible to integrate the list of NGINX servers stored in its inventory into the configuration file.
+
+To achieve this, consult the following documentation:
+- [Ansible template module guide][template-module-guide]
+- [Ansible variables documentation][ansible-variables]
+- [List of available Ansible facts and variables][ansible-facts]
+- [List of available special variables in Ansible][ansible-special-variables]
+- [Jinja2 documentation][jinja-template-documentation].
+
+
+<question-container question="Edit the <code>./slaves/haproxy/haproxy.cfg.j2</code> file to dynamically include the list of NGINX servers using the <code>template</code> module.">
+
+According to the [Ansible special variables documentation][ansible-groups-special-var], there is a `groups` variable that is a dictionary containing all the groups from the inventory. \
+There are some examples on how to use it in the [Ansible facts and variables documentation][ansible-groups-example] such as:
+```jinja2
+{% for host in groups['app_servers'] %}
+   # something that applies to all app servers.
+{% endfor %}
+```
+
+From this example, we can understand that the first line allows us to iterate through groups and, in this case, all the hosts that are in the `app_servers` group. The `host` variable corresponds to one machine from this group.
+
+In the configuration template that we have modified, the declaration of servers looks like `server app[0-9] {hostname}:{port} check`. \
+Our goal is to replace the `app[0-9]` with the index of the server, the `{hostname}` with the hostname or IP address of the NGINX server, and the `{port}` with the port NGINX server is using (spoiler: it is port `80`).
+
+In the [`for` documentation of Jinja2][jinja-for-documentation], we can see that there is a `loop` object available when using a `for` loop. 
+To replace the `[0-9]` part in `app[0-9]` with the position of the current host in the Ansible inventory, we are using the `index` method from this `loop` object.
+Then we replace the `{hostname}` with `{{ nginxServer }}`, which refers to the current host in the loop. Here it corresponds to NGINX server hostname.
+
+
+
+```haproxy.cfg
+#---------------------------------------------------------------------
+# Example configuration for a possible web application.  See the
+# full configuration options online.
+#
+#   https://www.haproxy.org/download/1.8/doc/configuration.txt
+#
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    # to have these messages end up in /var/log/haproxy.log you will
+    # need to:
+    #
+    # 1) configure syslog to accept network log events.  This is done
+    #    by adding the '-r' option to the SYSLOGD_OPTIONS in
+    #    /etc/sysconfig/syslog
+    #
+    # 2) configure local2 events to go to the /var/log/haproxy.log
+    #   file. A line like the following can be added to
+    #   /etc/sysconfig/syslog
+    #
+    #    local2.*                       /var/log/haproxy.log
+    #
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+    # utilize system-wide crypto-policies
+    ssl-default-bind-ciphers PROFILE=SYSTEM
+    ssl-default-server-ciphers PROFILE=SYSTEM
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+
+#---------------------------------------------------------------------
+# main frontend which proxys to the backends
+#---------------------------------------------------------------------
+frontend main 
+    bind                        *:{{ haproxy_port }}
+    default_backend             app
+
+#---------------------------------------------------------------------
+# round robin balancing between the various backends
+#---------------------------------------------------------------------
+backend app
+    balance     roundrobin
+    {% for nginxServer in groups.web  %}
+    server  app{{ loop.index }} {{ nginxServer }}:80 check
+    {% endfor %}
+```
+
+</question-container>
+
+
 [ansible-inventory]: https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html
 [docker-ps]: https://docs.docker.com/engine/reference/commandline/docker/
 [ansible-cfg]: https://docs.ansible.com/ansible/latest/reference_appendices/config.html
@@ -358,3 +717,12 @@ Hello! You are connected to ansible-training-web-1.
 [nginx-ubuntu-html]: https://ubuntu.com/tutorials/install-and-configure-nginx
 [creating-the-dockerfiles]: project-1/part-1?id=creating-the-dockerfiles
 [service-module]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/service_module.html
+[ansible-variables]: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html
+[ansible-facts]: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html
+[ansible-special-variables]: https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
+[jinja-template-documentation]: https://jinja.palletsprojects.com/en/latest/templates/
+[haproxy-config-documentation]: https://www.haproxy.com/documentation/haproxy-configuration-tutorials/core-concepts/ 
+<!-- https://docs.haproxy.org/2.4/configuration.html -->
+[ansible-groups-special-var]: https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html#term-groups
+[ansible-groups-example]: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html#information-about-ansible-magic-variables
+[jinja-for-documentation]: https://jinja.palletsprojects.com/en/latest/templates/#for

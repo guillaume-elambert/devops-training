@@ -220,7 +220,7 @@ Let's proceed task by task :
 <question-container question="Edit the <code>./master/playbooks/nginx.yml</code> file so it copies the content of the <code>./slaves/nginx/config/</code> folder into the NGINX configuration directory.">
 
 According to the [NGINX Beginner’s Guide][nginx-beginners-guide], the configuration folder of NGINX depends on the package system used to install NGINX and the operating system. \
-After some Googling and some research in the file system, it apperas that using `apt` in Ubuntu (the base of our container image), the configuration folder is `/etc/nginx/`.
+After some Googling and some research in the file system, it appears that using `apt` in Ubuntu (the base of our container image), the configuration folder is `/etc/nginx/`.
 
 ```yml
 - hosts: web
@@ -376,7 +376,9 @@ The first thing to start with is to install the HAProxy server using the `apt` m
 The next step is to configure the HAProxy server.
 
 <details>
-<summary>To create the HAProxy configuration template using Jinja2 and Ansible, we will use the following file as a starting point.</summary>
+<summary title="Click to see the default HAProxy configuration file.">
+<strong>To create the HAProxy configuration template using Jinja2 and Ansible**, we will use the following file as a starting point.</strong>
+</summary>
 
 ```haproxy.cfg
 #---------------------------------------------------------------------
@@ -706,6 +708,29 @@ backend app
 </question-container>
 
 
+### Global playbook
+
+With playbooks available for both HAProxy and NGINX, we can now construct a straightforward playbook to execute them. \
+To address the next question, consult the [import_playbook module documentation][import_playbook-doc].
+
+!> **It is crucial to highlight that for HAProxy to launch successfully, NGINX servers must be up and running.** \
+HAProxy appears to ping the servers specified in its configuration at the given port. If they don't respond, the startup fails.
+
+<question-container question="Create a <code>lamp.yml</code> playbook that will run both NGINX and HAProxy playbooks.">
+
+As mentioned, this playbook is quite straightforward. 
+All we're doing is importing the two playbooks created earlier. \ 
+By doing this, the tasks within **these playbooks will be executed in the order of import**: first the tasks from `nginx.yml` and then those from `haproxy.yml`. \
+In this way, **we ensure that the NGINX servers are operational before we try to start HAProxy**.
+
+```yml
+- import_playbook: nginx.yml
+- import_playbook: haproxy.yml
+```
+
+</question-container>
+
+
 [ansible-inventory]: https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html
 [docker-ps]: https://docs.docker.com/engine/reference/commandline/docker/
 [ansible-cfg]: https://docs.ansible.com/ansible/latest/reference_appendices/config.html
@@ -726,3 +751,4 @@ backend app
 [ansible-groups-special-var]: https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html#term-groups
 [ansible-groups-example]: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html#information-about-ansible-magic-variables
 [jinja-for-documentation]: https://jinja.palletsprojects.com/en/latest/templates/#for
+[import_playbook-doc]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/import_playbook_module.html

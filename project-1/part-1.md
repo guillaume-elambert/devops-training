@@ -1,9 +1,9 @@
-# Part 1 – Create the architecture
+# Part 1 – Create the infrastructure
 
-The initial step involves the establishment of an architecture comprising 7 distinct machines using `Docker`:
+The initial step involves the establishment of an infrastructure comprising 7 distinct machines using `Docker`:
 - **Ansible machine**: This machine serves as the control node for Ansible, responsible for orchestrating the configuration and management of the entire infrastructure.
 - **HAProxy load balancer machine**: A dedicated machine for the HAProxy load balancer, which will intelligently distribute incoming web traffic to the NGINX servers for optimal load balancing.
-- **NGINX servers**: There will be a total of <ins>5 NGINX server machines</ins>, each of which will host web content and collectively form the backend infrastructure. These servers are identical in configuration, ensuring consistency across the architecture.
+- **NGINX servers**: There will be a total of <ins>5 NGINX server machines</ins>, each of which will host web content and collectively form the backend infrastructure. These servers are identical in configuration, ensuring consistency across the infrastructure.
 
 The most convenient approach is to use `Docker Compose`, as we intend to create six replicas of identical empty machines – one for the HAProxy server and five for the NGINX servers.
 
@@ -14,15 +14,17 @@ In the realm of Docker, the [`Docker Hub`][docker-hub] offers an extensive array
 
 To uphold the educational value of this project and to ensure that you have the opportunity to learn how to use Ansible effectively, **only one container will contain an embedded application: the Ansible container**. The remaining containers will remain entirely empty, except for the essentials required for Ansible's operation, which include SSH and Python. It's through Ansible deployments that these containers will receive their applications, a crucial aspect of our hands-on learning experience.
 
-This approach will allow us to focus on Ansible's capabilities and how it can be utilized to deploy applications within a complex architecture.
+This approach will allow us to focus on Ansible's capabilities and how it can be utilized to deploy applications within a complex infrastructure.
 
 
-<br>
+<br/>
+
+----
 
 
 ## Creating the Dockerfiles
 
-As explained earlier, the objective is to create an architecture comprising one container with the integrated Ansible tool and six identical empty containers.
+As explained earlier, the objective is to create an infrastructure comprising one container with the integrated Ansible tool and six identical empty containers.
 
 We will need to create two images for this purpose. As mentioned in the [Ansible introduction][ansible-introduction], **Ansible relies on SSH and Python** for its operation.
 Therefore, we must create one image that includes Ansible, an SSH server, and Python, along with an image that contains only Python and an SSH client.
@@ -92,18 +94,20 @@ CMD ["/usr/sbin/sshd", "-D"]
 </question-container>
 
 
-<br>
+<br/>
+
+----
 
 
 ## Creating the `docker-compose.yml` file
 
-Now that we have our Dockerfiles ready, it's time to build the complete architecture using Docker Compose. \
-As a reminder, here is what the architecture should look like:
+Now that we have our Dockerfiles ready, it's time to build the complete infrastructure using Docker Compose. \
+As a reminder, here is what the infrastructure should look like:
 
-![](../_assets/media/ansible-training-pt1.svg)
+![][infrastructure-pt1]
 
 
-To create this architecture, let's break down the problem into three parts:
+To create this infrastructure, let's break down the problem into three parts:
 
 
 <!-- tabs:start -->
@@ -147,7 +151,7 @@ To create this architecture, let's break down the problem into three parts:
         <th>Volumes</th>
         <td>
             <p>
-                As we are simulating a real architecture where remote access to the server is required, <strong>we won't use volumes</strong>.<br>
+                As we are simulating a real infrastructure where remote access to the server is required, <strong>we won't use volumes</strong>.<br>
                 Instead, we will <strong>deploy everything using Ansible</strong>.
             </p>
         </td>
@@ -194,7 +198,7 @@ To create this architecture, let's break down the problem into three parts:
         <th>Volumes</th>
         <td>
             <p>
-                As we are simulating a real architecture where remote access to the servers is required, <strong>we won't use volumes</strong>. Instead, we will <strong>deploy everything using Ansible</strong>
+                As we are simulating a real infrastructure where remote access to the servers is required, <strong>we won't use volumes</strong>. Instead, we will <strong>deploy everything using Ansible</strong>
             </p>
         </td>
     </tr>
@@ -439,7 +443,9 @@ networks:
 </question-container>
 
 
-<br>
+<br/>
+
+----
 
 
 ## Create file architecture
@@ -464,10 +470,12 @@ With these modifications, you should have a file architecture like this:
 ```
 
 
-<br>
+<br/>
+
+----
 
 
-## Run the architecture
+## Run the infrastructure
 
 The first part is complete, and the infrastructure is now prepared to handle the project. \
 Technically, you still need to get it running using the command `docker compose -f docker-compose.yml up -d`. \
@@ -478,6 +486,6 @@ Once that done and the Docker Compose infrastructure up and running, let's conti
 [ansible-introduction]: what-is-ansible/
 [service-module]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/service_module.html
 [docker-image]: https://hub.docker.com/r/geerlingguy/docker-ubuntu2204-ansible
-[architecture-pt1]: _assets/media/ansible-training-pt1.svg
+[infrastructure-pt1]: ../_assets/media/ansible-training-pt1.svg
 [docker-network-drivers]: https://docs.docker.com/network/drivers/
 [ansible-container-explanation]: project-1/part-1?id=ansible-container-explanation

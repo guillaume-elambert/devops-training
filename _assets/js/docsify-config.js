@@ -259,9 +259,12 @@ function handleAdditionnalTitleBefore(vm, markdown){
 
         // Go through the markdown string and look for the reference node
         const regex = new RegExp(referenceNodeSelector.referenceNodeRegexSelector, 'g');
-        const titleRegex = / *(#+).*/;
+        const titleRegex = / *(#+)\s+(.*)/;
+        const codeBlockRegex = /```(.|\s)*?```[\w.]*/g;
         let modifiedMarkdown = "";
         let lastIndex = 0;
+        const originalReversedMarkdown = markdown.split('\n').reverse().join('\n');
+        const markdownLength = markdown.length;
 
         // Iterate over all the markdown to look for the reference node
         while((match = regex.exec(markdown)) !== null){
@@ -271,10 +274,11 @@ function handleAdditionnalTitleBefore(vm, markdown){
 
             // Get the index of the reference node
             const referenceNodeIndex = match.index;
+            const reversedMarkdown = originalReversedMarkdown.substring(markdownLength - referenceNodeIndex).replaceAll(codeBlockRegex, '');
 
             // Get the first title level that is before the reference node
             // It should start from the end of the string and stop when it finds a title level
-            const titleMatch = titleRegex.exec(markdown.substring(0, referenceNodeIndex).split('\n').reverse().join('\n'));
+            const titleMatch = titleRegex.exec(reversedMarkdown);
 
             // Cont the number of # in the title level
             const titleLevel = (titleMatch && titleMatch[1] ? titleMatch[1].length : 0) + 1;

@@ -44,14 +44,14 @@ In my case, it is `ansible-training-web-[0-9]+` and `ansible-training-lb-1`:
 ```bash
 $ docker ps -a
 
-CONTAINER ID   IMAGE            COMMAND                  CREATED       STATUS                     PORTS                                   NAMES
-94a6be75089f   ansible-training-master   "/bin/sh -c 'tail -f…"   12 days ago   Exited (255) 12 days ago                                           ansible-training-master-1
-13573728ca5c   ansible-training-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-training-web-3
-6eb59a8a9e48   ansible-training-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-training-web-4
-a1711121adfb   ansible-training-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-training-web-2
-b3c893158517   ansible-training-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-training-web-5
-71b5199a0ed8   ansible-training-web      "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago                                           ansible-training-web-1
-d0940852b78a   ansible-training-lb       "/usr/sbin/sshd -D"      12 days ago   Exited (255) 12 days ago   0.0.0.0:8080->80/tcp, :::8080->80/tcp   ansible-training-lb-1
+CONTAINER ID   IMAGE                     COMMAND                  CREATED          STATUS          PORTS                                   NAMES
+c3990bcb0f51   ansible-training-master   "/bin/sh -c 'tail -f…"   58 seconds ago   Up 16 seconds                                           ansible-training-master-1
+b74afe9fa4d5   ansible-training-web      "/usr/sbin/sshd -D"      58 seconds ago   Up 46 seconds                                           ansible-training-web-2
+b510c5552443   ansible-training-web      "/usr/sbin/sshd -D"      58 seconds ago   Up 40 seconds                                           ansible-training-web-4
+5831a1467587   ansible-training-web      "/usr/sbin/sshd -D"      58 seconds ago   Up 32 seconds                                           ansible-training-web-3
+5c6be2e5680c   ansible-training-web      "/usr/sbin/sshd -D"      58 seconds ago   Up 26 seconds                                           ansible-training-web-5
+08f40205f76c   ansible-training-web      "/usr/sbin/sshd -D"      58 seconds ago   Up 21 seconds                                           ansible-training-web-1
+682af2d70cf9   ansible-training-lb       "/usr/sbin/sshd -D"      58 seconds ago   Up 51 seconds   0.0.0.0:8080->80/tcp, :::8080->80/tcp   ansible-training-lb-1
 ```
 
 </question-container>
@@ -179,7 +179,9 @@ remote_user = root
 In the solution given above we do specify to Ansible which user to use when connecting through SSH to the servers but not the password. To by pass this issue, we will have to edit the inventory.
 
 
-<br>
+<br/>
+
+----
 
 ## Creating playbooks
 
@@ -726,6 +728,113 @@ In this way, **we ensure that the NGINX servers are operational before we try to
 ```yml
 - import_playbook: nginx.yml
 - import_playbook: haproxy.yml
+```
+
+</question-container>
+
+
+<br>
+
+----
+
+
+## Run the playbooks
+
+The playbooks are now ready to be executed. \
+In this section, we will run them and verify that everything is working as expected.
+
+<question-container question="Run the <code>lamp.yml</code> playbook and check the status of the containers.">
+
+```bash
+$ docker compose exec master ansible-playbook lamp.yml
+```
+
+</question-container>
+
+Now if everything worked correctly, you should be able to access the web server on `http://127.0.0.1:8080`.
+
+!> The port, here `8080`, depends on the `haproxy_port` variable you specified in the Ansible inventory.
+
+To verify that HAProxy successfully load balances across the different NGINX servers, you can refresh the page with cache reloading using:
+- Windows & Linux: `Ctrl` + `Shift` + `R`
+- Mac: `Cmd` + `Shift` + `R`
+
+You should observe a different message each time you reload the page, indicating the current server to which you are connected.
+
+
+<br>
+
+----
+
+
+## Start Ansible deployment on `master` startup 
+
+To enhance the configuration, you can modify the `docker-compose.yml` file to automatically execute the `lamp.yml` playbook upon creation.
+
+!> To achieve this, you need to ensure that the `master` node depends on the `web` and `lb` nodes. \
+In other words, Ansible playbooks should not run until all the containers (servers) are ready.
+
+
+<question-container question="Edit the <code>docker-compose.yml</code> file to automatically execute the <code>lamp.yml</code> playbook upon creation.">
+
+To accomplish this, you should edit the `entrypoint` section of the `master` service.
+Simply add the command `ansible-playbook lamp.yml` within this section. \
+**<ins>Ensure that the command is placed above `tail -f /dev/null`</ins>** in the configuration; otherwise, it won't be executed by the container.
+
+```yml
+services:
+    master:
+        build:
+            context: .
+            dockerfile: ./master.Dockerfile
+        working_dir: /root/playbooks
+        volumes:
+            - ./master/playbooks:/root/playbooks
+            - ./master/config:/etc/ansible
+            - ./slaves:/root/slaves
+        entrypoint:
+            - /bin/sh
+            - -c
+            - |
+              ansible-playbook lamp.yml
+              tail -f /dev/null
+        depends_on:
+            - web
+            - lb
+        networks:
+            - web
+            - lb
+
+    lb:
+        build:
+            context: .
+            dockerfile: ./server.Dockerfile
+        depends_on:
+            - web
+        ports:
+            - 8080:80
+        networks:
+            - lb
+
+    web:
+        build:
+            context: .
+            dockerfile: ./server.Dockerfile
+        deploy:
+            replicas: 5
+            restart_policy:
+                condition: on-failure
+                max_attempts: 3
+                window: 120s
+        networks:
+            - web
+            - lb
+
+networks:
+    web:
+        driver: bridge
+    lb:
+        driver: bridge
 ```
 
 </question-container>

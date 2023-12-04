@@ -1,0 +1,15 @@
+---
+# tasks file for ./playbooks/roles/haproxy
+
+- name: Install HAProxy
+  apt:
+    name: haproxy
+    update_cache: true
+    state: present
+
+- name: Configure HAProxy 
+  template:
+    src: ../templates/haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify:
+    - Restart HAProxy

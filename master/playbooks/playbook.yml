@@ -1,0 +1,7 @@
+- hosts: web
+  roles:
+    - nginx
+
+- hosts: dev_lb
+  roles:
+    - haproxy

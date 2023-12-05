@@ -28,4 +28,3 @@ dev_lb
 [all:vars]
 ansible_ssh_user=root
 ansible_ssh_pass=ansible
-haproxy_port=80

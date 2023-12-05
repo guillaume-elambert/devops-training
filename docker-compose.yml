@@ -8,7 +8,6 @@ services:
     volumes:
       - ./master/playbooks:/root/playbooks
       - ./master/config:/etc/ansible
-      - ./slaves:/root/slaves
     entrypoint: 
       - /bin/sh
       - -c

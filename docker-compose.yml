@@ -13,7 +13,7 @@ services:
       - -c
       - |
         tail -f /dev/null
-      # ansible-playbook lamp.yml
+      # ansible-playbook playbook.yml
     depends_on:
       - web
       - db

@@ -384,7 +384,8 @@ Their content should be something like:
 ```
 
 <!-- tab:`./defaults/main.yml` -->
-I hope you haven't forgotten the `haproxy_port` defined in the Ansible inventory and used in the `haproxy.cfg.j2` template.
+I hope you haven't forgotten the `haproxy_port` defined in the Ansible inventory and used in the `haproxy.cfg.j2` template. \
+Any variables specific to a role should be declared in the `defaults/main.yml` or `vars/main.yml` of that particular role. The variable `haproxy_port` is no exception to this rule.
 
 ```yml
 ---

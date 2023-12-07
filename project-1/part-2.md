@@ -751,7 +751,7 @@ $ docker compose exec master ansible-playbook lamp.yml
 
 </question-container>
 
-Now if everything worked correctly, you should be able to access the web server on `http://127.0.0.1:8080`.
+Now if everything worked correctly, you should be able to access the web server on [`http://127.0.0.1:8080`][local-project-address].
 
 !> The port, here `8080`, depends on the `haproxy_port` variable you specified in the Ansible inventory.
 
@@ -861,3 +861,4 @@ networks:
 [ansible-groups-example]: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html#information-about-ansible-magic-variables
 [jinja-for-documentation]: https://jinja.palletsprojects.com/en/latest/templates/#for
 [import_playbook-doc]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/import_playbook_module.html
+[local-project-address]: http://127.0.0.1:8080

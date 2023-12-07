@@ -2,7 +2,7 @@
 
 The objective of this section is to align our current setup with Ansible standards.
 
-?> Throughout this part, I recommend consulting online documentation, such as [this tutorial from DigitalOcean][tuto-ansible-roles].
+?> Throughout this part, I recommend consulting online documentation, such as [the official Ansible documentation on roles][ansible-roles-documentation] and [this tutorial from DigitalOcean][tutorial-ansible-roles].
 
 ## What is an Ansible role and its purpose
 
@@ -340,6 +340,9 @@ haproxy/
     `-- main.yml*
 ```
 
+After moving all these files, your `ansible-training/slaves/` directory should be empty.
+Delete it.
+
 <br>
 
 Now, assuming you are in the directory `ansible-training/master/playbooks/roles/haproxy`, the files to be modified are the following:
@@ -455,7 +458,126 @@ dependencies:
 
 </question-container>
 
+<br>
 
-[tuto-ansible-roles]: https://www.digitalocean.com/community/tutorials/how-to-use-ansible-roles-to-abstract-your-infrastructure-environment
+---
+
+
+## Global playbook: `lamp.yml`
+
+Now that the Ansible roles have been created, all **the old playbooks** in `ansible-training/master/playbooks/` are **no longer needed and don't even work anymore**. \
+We can now **delete those related to HAProxy and NGINX** and adapt the `lamp.yml` playbook so it runs the roles.
+
+To do this, please refer to [the official Ansible documentation on roles][ansible-roles-documentation] and [this tutorial from DigitalOcean][tutorial-ansible-roles].
+
+<question-container question="Edit the <code>lamp.yml</code> to integrate the <code>nginx</code> and <code>haproxy</code> roles.">
+
+Here, we are instructing Ansible to apply the `nginx` role on the `web` hosts and `haproxy` role to the load balancer.
+
+```yml
+- hosts: web
+  roles:
+    - nginx
+
+- hosts: dev_lb
+  roles:
+    - haproxy
+```
+
+</question-container>
+
+<br>
+
+---
+
+
+## Final configuration and run
+
+Now, the playbooks adhere to Ansible standards.
+However, if you recall the beginning of this project, we defined in the `docker-compose.yml` a volume that maps the `ansible-trinaing/slaves/` directory to the `/root/slaves/` folder of the `master` container (the one on which Ansible is installed). \
+As this directory no longer exists, we need to adapt the <code>docker-compose.yml</code> configuration file.
+
+<question-container question="Edit the <code>docker-compose.yml</code> file to reflect the removal of the <code>ansible-trinaing/slaves/</code> directory.">
+
+```yml
+services:
+    master:
+        build:
+            context: .
+            dockerfile: ./master.Dockerfile
+        working_dir: /root/playbooks
+        volumes:
+            - ./master/playbooks:/root/playbooks
+            - ./master/config:/etc/ansible
+            # - ./slaves:/root/slaves
+            #  ⮤ Delete this line ⮥
+        entrypoint:
+            - /bin/sh
+            - -c
+            - tail -f /dev/null
+        depends_on:
+            - web
+            - lb
+        networks:
+            - web
+            - lb
+
+    lb:
+        build:
+            context: .
+            dockerfile: ./server.Dockerfile
+        depends_on:
+            - web
+        ports:
+            - 8080:80
+        networks:
+            - lb
+
+    web:
+        build:
+            context: .
+            dockerfile: ./server.Dockerfile
+        deploy:
+            replicas: 5
+            restart_policy:
+                condition: on-failure
+                max_attempts: 3
+                window: 120s
+        networks:
+            - web
+            - lb
+
+networks:
+    web:
+        driver: bridge
+    lb:
+        driver: bridge
+```
+
+</question-container>
+
+Finally, you can execute the updated Ansible using the following commands:
+```bash
+# Stop the old configuration
+$ docker compose down
+
+# Create the new infrastructure
+$ docker compose up -d
+
+# Deploy everything using Ansible
+$ docker compose exec master ansible-playbook lamp.yml
+```
+
+:tada: &nbsp;And there you have it – everything is set up and ready to go! \
+You can ensure that everything worked correctly by visiting [`http://127.0.0.1:8080`][local-project-address].
+
+To verify that HAProxy successfully load balances across the different NGINX servers, you can refresh the page with cache reloading using:
+- Windows & Linux: `Ctrl` + `Shift` + `R`
+- Mac: `Cmd` + `Shift` + `R`
+
+
+[ansible-roles-documentation]: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html
+[tutorial-ansible-roles]: https://www.digitalocean.com/community/tutorials/how-to-use-ansible-roles-to-abstract-your-infrastructure-environment
 [ansible-galaxy-doc]: https://docs.ansible.com/ansible/latest/cli/ansible-galaxy.html
 [ansible-galaxy-website]: https://galaxy.ansible.com/
+[local-project-address]: http://127.0.0.1:8080

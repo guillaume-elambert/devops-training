@@ -479,7 +479,7 @@ Here, we are instructing Ansible to apply the `nginx` role on the `web` hosts an
   roles:
     - nginx
 
-- hosts: dev_lb
+- hosts: lb
   roles:
     - haproxy
 ```

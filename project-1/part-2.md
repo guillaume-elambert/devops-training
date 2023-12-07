@@ -363,7 +363,7 @@ The first thing to start with is to install the HAProxy server using the `apt` m
 <question-container question="Create the <code>./master/playbooks/haproxy.yml</code> file and use the <code>apt</code> module to install HAProxy.">
 
 ```yml
-- hosts: dev_lb
+- hosts: lb
   tasks:
     - name: Install HAProxy
       apt:

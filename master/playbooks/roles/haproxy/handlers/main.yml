@@ -1,5 +1,5 @@
 ---
-# handlers file for ./playbooks/roles/haproxy
+# handlers file for ./roles/haproxy
 
 - name: Restart HAProxy
   become: true

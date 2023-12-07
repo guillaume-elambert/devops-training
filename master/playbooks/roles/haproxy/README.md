@@ -20,7 +20,7 @@ Example Playbook
 ----------------
 
 ```yml
-- hosts: dev_lb
+- hosts: lb
   roles:
     - haproxy
 ```

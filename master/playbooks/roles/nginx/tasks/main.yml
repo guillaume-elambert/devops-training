@@ -1,5 +1,5 @@
 ---
-# tasks file for ./playbooks/roles/nginx
+# tasks file for ./roles/nginx
 
 - name: Install NGINX
   become: yes

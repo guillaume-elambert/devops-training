@@ -1,5 +1,5 @@
 ---
-# handlers file for ./playbooks/roles/nginx
+# handlers file for ./roles/nginx
 
 - name: Restart Nginx
   become: true

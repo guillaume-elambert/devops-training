@@ -2,6 +2,6 @@
   roles:
     - nginx
 
-- hosts: dev_lb
+- hosts: lb
   roles:
     - haproxy

@@ -1,2 +1,2 @@
 ---
-# vars file for ./playbooks/roles/haproxy
+# vars file for ./roles/haproxy

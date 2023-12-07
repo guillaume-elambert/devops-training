@@ -33,13 +33,13 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# Launching the ansible playbook playbook.yml
+# Launching the ansible playbook lamp.yml
 echo -e "\n\e[32mLaunching ansible playbook\e[0m"
-docker compose exec master ansible-playbook playbook.yml
+docker compose exec master ansible-playbook lamp.yml
 
 # Ensure the ansible playbook has run successfully
 if [[ $? -ne 0 ]]; then
-    echo -e "\e[31mERROR: \e[0mFailed to run the playbook.yml playbook."
+    echo -e "\e[31mERROR: \e[0mFailed to run the lamp.yml playbook."
     exit 1
 fi
 

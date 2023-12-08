@@ -163,7 +163,7 @@ img {
 
 /* Logo sizing */
 #logo {
-    width: 200px;
+    width: 400px;
     height: auto;
 
     /* Set transition for size changes */
@@ -171,13 +171,13 @@ img {
 }
 
 /* Ensure that the logo is not covering the navbar */
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
     .cover-main {
         padding-top: 60px
     }
 
     #logo {
-        width: 150px;
+        width: 250px;
     }
 }
 

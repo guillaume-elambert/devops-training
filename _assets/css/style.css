@@ -162,12 +162,16 @@ img {
 }
 
 /* Logo sizing */
-#logo {
+.logo {
     width: 400px;
     height: auto;
 
     /* Set transition for size changes */
     transition: width 0.5s, height 0.5s;
+}
+
+#ansible-logo {
+    width: 200px;
 }
 
 /* Ensure that the logo is not covering the navbar */
@@ -176,9 +180,25 @@ img {
         padding-top: 60px
     }
 
-    #logo {
+    .logo {
         width: 250px;
     }
+
+    #ansible-logo {
+        width: 150px;
+    }
+}
+
+.sub-home-header {
+    width: 100%;
+    text-align: center;
+    padding-bottom: 3em;
+    margin-bottom: 4em;
+    border-bottom: 2px solid #eee;
+}
+
+.sub-home-header :last-child {
+    margin-bottom: 0 !important;
 }
 
 /* Make code inside title about the same size as text */

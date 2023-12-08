@@ -11,3 +11,5 @@
       - [Part 1 – Create the architecture](ansible-training/project-1/part-1.md)
       - [Part 2 – Create the Ansible playbooks](ansible-training/project-1/part-2.md)
       - [Part 3 - From hacky to standard](ansible-training/project-1/part-3.md)
+
+- [Terraform training](terraform-training/README.md)

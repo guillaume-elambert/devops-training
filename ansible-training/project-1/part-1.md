@@ -486,6 +486,6 @@ Once that done and the Docker Compose infrastructure up and running, let's conti
 [ansible-introduction]: what-is-ansible/
 [service-module]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/service_module.html
 [docker-image]: https://hub.docker.com/r/geerlingguy/docker-ubuntu2204-ansible
-[infrastructure-pt1]: ../_assets/media/ansible-training-pt1.svg
+[infrastructure-pt1]: ../../_assets/media/ansible-training-pt1.svg
 [docker-network-drivers]: https://docs.docker.com/network/drivers/
 [ansible-container-explanation]: project-1/part-1?id=ansible-container-explanation

@@ -7,7 +7,7 @@ class QuestionContainer extends HTMLElement {
 
     constructor() {
         super();
-        if(QuestionContainer.previousRoute !== window.location.href){
+        if (QuestionContainer.previousRoute !== window.location.href) {
             QuestionContainer.questionNumber = 0;
             QuestionContainer.previousRoute = window.location.href;
         }
@@ -34,7 +34,7 @@ class QuestionContainer extends HTMLElement {
             h4[id="${this.questionId}"],
             h5[id="${this.questionId}"],
             h6[id="${this.questionId}"]`;
-            
+
         QuestionContainer.questionContainers.push(this);
     }
 
@@ -44,7 +44,7 @@ class QuestionContainer extends HTMLElement {
         }
     }
 
-    changeAllLinks(){
+    changeAllLinks() {
         const linksToQuestion = document.querySelectorAll(`a[href*="${this.fullQuestionId}"]`);
 
         linksToQuestion.forEach(link => {
@@ -53,19 +53,19 @@ class QuestionContainer extends HTMLElement {
         });
     }
 
-    changeTitle(){
+    changeTitle() {
         // Get the brother element that is a h* element with the id starting with question-{{this.questionNumber}}
-        this.questionTitle = this.questionTitle 
-                          ?? this.parentNode?.querySelector(this.beforeChangeTitleSelector)
-                          ?? this.querySelector(this.afterChangeTitleSelector);
+        this.questionTitle = this.questionTitle
+            ?? this.parentNode?.querySelector(this.beforeChangeTitleSelector)
+            ?? this.querySelector(this.afterChangeTitleSelector);
 
-        if(this.questionTitle){
+        if (this.questionTitle) {
             this.questionTitle.id = this.questionId;
             this.questionTitle.classList.add('question-title');
 
             const questionIntroducer = this.questionTitle.querySelector('question-introducer');
-            
-            if(questionIntroducer){
+
+            if (questionIntroducer) {
                 questionIntroducer.innerHTML = this.titleInnerHTML;
             }
 
@@ -85,14 +85,14 @@ class QuestionContainer extends HTMLElement {
         `;
     }
 }
-                
+
 // Register the custom DOM elements
 customElements.define('question-container', QuestionContainer);
 var element = null;
 
 window.$docsify = {
-    name: 'Ansible training',
-    repo: 'https://github.com/guillaume-elambert/ansible-training',
+    name: 'DevOps training',
+    repo: 'https://github.com/guillaume-elambert/devops-training',
     coverpage: true,
     loadSidebar: true,
     loadNavbar: true,
@@ -113,22 +113,22 @@ window.$docsify = {
         crossChapterText: true,
     },
     auto2top: true,
-    zoomImage:{
+    zoomImage: {
         background: "#00000050",
         margin: 50,
     },
-    addTitleBeforeElements : [
+    addTitleBeforeElements: [
         {
             referenceNodeRegexSelector: '< *question-container\\s*question ?= ?(["\'])(.*)\\1 *>',
             titleToAddBefore: "\n\n{{nextTitleLevel}} <question-introducer><i class='fa-solid fa-brain'></i>Question {{questionNumber}} – {{2}}</question-introducer>\n\n",
-            whenFounded: function(referenceNodeMatch, modifiedReferenceNode, currentRoute){
+            whenFounded: function (referenceNodeMatch, modifiedReferenceNode, currentRoute) {
 
                 questionNumber++;
                 modifiedReferenceNode = modifiedReferenceNode.replaceAll('{{questionNumber}}', questionNumber);
-                
+
                 return modifiedReferenceNode;
             },
-            afterAllMatches: function(modifiedMarkdow){
+            afterAllMatches: function (modifiedMarkdow) {
                 questionNumber = 0;
                 lastRoutePath = null;
                 return modifiedMarkdow;
@@ -141,6 +141,7 @@ window.$docsify = {
             hook.doneEach(function () {
                 handleUrlPointingToDetails(vm.route.query.id);
                 handleLinksInSummary();
+                handleSidebarLinks();
 
                 QuestionContainer.questionContainers.forEach(questionContainer => {
                     questionContainer.changeAllLinks();
@@ -150,11 +151,11 @@ window.$docsify = {
 
             hook.ready(function () {
                 // If the url contains a path parameter to a specific id, scroll to the element with the corresponding id
-                if (vm?.route?.query?.id){
+                if (vm?.route?.query?.id) {
                     element = document.getElementById(vm.route.query.id);
 
-                    if(!element) return;
-                    
+                    if (!element) return;
+
                     if (vm.route.query.id.match(/question-\d+/) && element.parentElement) {
                         element = element.parentElement;
                     }
@@ -172,7 +173,7 @@ window.$docsify = {
             });
 
             hook.beforeEach(function (markdown) {
-                url = 'https://github.com/guillaume-elambert/ansible-training/blob/docs/' + vm.route.file;
+                url = `${window.$docsify.repo}/blob/docs/${vm.route.file}`;
                 let editMarkdown = '[:memo: Edit Document](' + url + ')\n';
 
                 markdown = replaceFontAwesomeIcons(markdown);
@@ -185,6 +186,31 @@ window.$docsify = {
 
         }
     ]
+}
+
+function handleSidebarLinks() {
+    var parentLinks = document.querySelectorAll('.sidebar-nav > ul > li:has(ul)');
+
+    parentLinks.forEach(function (parentLink) {
+        // Add event listener to the parent link
+        parentLink.querySelector("p").addEventListener("click", function (event) {
+            if (parentLink.classList.contains('expanded')) {
+                parentLink.classList.remove('expanded');
+                parentLink.classList.add('collapsed');
+            } else {
+                parentLink.classList.add('expanded');
+                parentLink.classList.remove('collapsed');
+            }
+        });
+
+        if(!parentLink.querySelector(".active")) {
+            parentLink.classList.remove('expanded');
+            parentLink.classList.add('collapsed');
+        } else {
+            parentLink.classList.add('expanded');
+            parentLink.classList.remove('collapsed');
+        }
+    });
 }
 
 
@@ -248,14 +274,14 @@ questionNumber = 0;
  * @param {*} vm The Docsify object
  * @param string markdown The markdown to parse
  */
-function handleAdditionnalTitleBefore(vm, markdown){
-    if(!vm || !vm.config?.addTitleBeforeElements || !markdown || !markdown.trim()) return;
-    
+function handleAdditionnalTitleBefore(vm, markdown) {
+    if (!vm || !vm.config?.addTitleBeforeElements || !markdown || !markdown.trim()) return;
+
     let match = null;
 
     // Iterate over all the elements that should be added before another element
-    vm.config.addTitleBeforeElements.forEach(function(referenceNodeSelector){
-        if(!referenceNodeSelector.referenceNodeRegexSelector) return;
+    vm.config.addTitleBeforeElements.forEach(function (referenceNodeSelector) {
+        if (!referenceNodeSelector.referenceNodeRegexSelector) return;
 
         // Go through the markdown string and look for the reference node
         const regex = new RegExp(referenceNodeSelector.referenceNodeRegexSelector, 'g');
@@ -267,8 +293,8 @@ function handleAdditionnalTitleBefore(vm, markdown){
         const markdownLength = markdown.length;
 
         // Iterate over all the markdown to look for the reference node
-        while((match = regex.exec(markdown)) !== null){
-            
+        while ((match = regex.exec(markdown)) !== null) {
+
             // Get the content of the reference node
             const referenceNode = match[0];
 
@@ -284,20 +310,20 @@ function handleAdditionnalTitleBefore(vm, markdown){
             const titleLevel = (titleMatch && titleMatch[1] ? titleMatch[1].length : 0) + 1;
 
             let modifiedReferenceNode = referenceNodeSelector.titleToAddBefore;
-                
+
             // Add titleLevel * '#' to the editedMarkdown
             modifiedReferenceNode = modifiedReferenceNode.replaceAll('{{nextTitleLevel}}', '#'.repeat(titleLevel)).replaceAll('{{titleLevel}}', '#'.repeat(titleLevel - 1));
 
             // Replace all the {{n}} with the corresponding match
-            for(let i = 0; i < match.length; i++){
+            for (let i = 0; i < match.length; i++) {
                 modifiedReferenceNode = modifiedReferenceNode.replaceAll('{{' + i + '}}', match[i]);
             }
-            
+
             // Add the HTML string before the reference node
             modifiedReferenceNode += referenceNode;
 
             // whenFounded and is called after the new element(s) have been added
-            if(referenceNodeSelector.whenFounded && typeof referenceNodeSelector.whenFounded === 'function'){
+            if (referenceNodeSelector.whenFounded && typeof referenceNodeSelector.whenFounded === 'function') {
                 modifiedReferenceNode = referenceNodeSelector.whenFounded(match, modifiedReferenceNode, vm?.route);
             }
 
@@ -307,9 +333,9 @@ function handleAdditionnalTitleBefore(vm, markdown){
 
         markdown = modifiedMarkdown + markdown.substring(lastIndex);
 
-        
-    
-        if(referenceNodeSelector.afterAllMatches && typeof referenceNodeSelector.afterAllMatches === 'function'){
+
+
+        if (referenceNodeSelector.afterAllMatches && typeof referenceNodeSelector.afterAllMatches === 'function') {
             markdown = referenceNodeSelector.afterAllMatches(markdown);
         }
 
@@ -342,12 +368,12 @@ function replaceFontAwesomeIcons(markdown) {
 
         let css = "";
 
-        if(size){
+        if (size) {
             // Check if size is a numeric value and return the matched values
             const match = size.match(regexNumericSize);
 
             // Entering : the size is a numeric value
-            if(match){
+            if (match) {
                 numericSize = match[1] + (match[3] || 'em');
                 css += `font-size: ${numericSize};`;
             }

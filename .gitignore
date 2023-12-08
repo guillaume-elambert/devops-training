@@ -1,2 +1,4 @@
-master/playbooks/*.retry
+ansible-training/master/playbooks/*.retry
 .vscode/
+terraform-training/.terraform*
+terraform-training/terraform.tfstate*

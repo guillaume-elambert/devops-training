@@ -562,6 +562,7 @@ question-container pre {
 .sidebar-nav > ul > li:has(ul) {
     display: grid;
     grid-template-rows: 4ch 1fr;
+    grid-auto-columns: 100%;
     transition: grid-template-rows var(--collapse-transition-time);
 }
 

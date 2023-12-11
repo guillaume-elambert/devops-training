@@ -535,7 +535,7 @@ question-container pre {
 }
 
 .sidebar-nav > ul > li:has(ul) {
-    --collapse-transition-time: 0.2s;
+    --collapse-transition-time: 0.5s;
 }
 
 .sidebar-nav > ul > li:has(ul) > p {
@@ -554,28 +554,45 @@ question-container pre {
     transition: transform var(--collapse-transition-time);
 }
 
-.sidebar-nav > ul > li:has(ul) > ul {
-    transition-property: clip-path;
-    transition-duration: var(--collapse-transition-time);
-    transition-timing-function: ease-out;
-    clip-path: inset(0 0 0 0);
+
+.sidebar-nav > ul > li:has(ul).expanded > p::before {
+    transform: rotate(90deg);
+}
+
+.sidebar-nav > ul > li:has(ul) {
+    display: grid;
+    grid-template-rows: 4ch 1fr;
+    transition: grid-template-rows var(--collapse-transition-time);
+}
+
+.sidebar-nav > ul > li.collapsed > ul {
+    overflow: hidden;
 }
 
 .sidebar-nav > ul > li:has(ul).collapsed > p::before {
     transform: rotate(0);
 }
 
-.sidebar-nav > ul > li:has(ul).collapsed > ul {
-    clip-path: inset(0 0 100% 0);
-    transition-timing-function: ease-in;
+.sidebar-nav > ul > li.collapsed:has(ul) {
+    grid-template-rows: 4ch 0fr;
 }
 
-.sidebar-nav > ul > li:has(ul).expanded > p::before {
-    transform: rotate(90deg);
+@keyframes border-sidebar {
+    from {
+        border-right: none;
+    }
+    to {
+        border-right: 2px solid var(--theme-color);
+    }
+}
+
+.sidebar-nav  > ul > li:has(li.active).collapsed > p > a {
+    animation: border-sidebar var(--collapse-transition-time);
+    border-right: 2px solid var(--theme-color);
 }
 
 .sidebar .active > a {
-    border-right: 2px solid;
+    border-right: 2px solid var(--theme-color);
     color: #42b983;
     color: var(--theme-color,#42b983);
     font-weight: 600;

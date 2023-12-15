@@ -18,7 +18,7 @@
             "host01": [
                 {
                     "file": "tools/*",
-                    "target": "/tmp/tools/"
+                    "target": "/tmp/tools"
                 }
             ]
         },

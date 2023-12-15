@@ -5,7 +5,7 @@
     "details": {
         "intro": {
             "text": "intro.md",
-            "foreground": "init-setup.sh"
+            "foreground": "tools/all-setup.sh"
         },
         "steps": [
             {
@@ -16,6 +16,10 @@
         ],
         "assets": {
             "host01": [
+                {
+                    "file": "tools/*",
+                    "target": "/tmp/tools/"
+                }
             ]
         },
         "finish": {

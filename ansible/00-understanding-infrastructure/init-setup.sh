@@ -1,14 +1,19 @@
 #!/bin/bash
 
-# Check if docker is installed, if not install it
-if ! [ -x "$(command -v docker)" ]; then
-  curl -fsSL https://get.docker.com -o get-docker.sh
-  sudo sh ./get-docker.sh
-  rm get-docker.sh
-fi
+# Get all the *-setup.sh (except all-setup.sh) scripts in the current directory
+# and run them.
+for script in $(ls -1 /tmp/tools/*-setup.sh | grep -v all-setup.sh); do
+    # Make the script executable
+    chmod +x $script
+    echo "Running $script"
+    
+    # Remove the extension from the script name
+    script_name=$(echo $script | sed 's/\(.*\)\..*/\1/')
 
-# Install Ansible
-apt -y install ansible
+    # Touch the script name to create the lock file
+    touch /tmp/$script_name.lock
 
-# Create ansible-training directory
-mkdir -p /root/ansible-training && cd /root/ansible-training
+    # Run the script then remove the lock file
+    sudo bash $script && rm /tmp/$script_name.lock
+done
+

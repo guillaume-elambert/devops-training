@@ -5,7 +5,7 @@
     "details": {
         "intro": {
             "text": "intro.md",
-            "foreground": "tools/setup.sh"
+            "foreground": "../tools/setup.sh"
         },
         "steps": [
             {

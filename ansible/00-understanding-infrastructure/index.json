@@ -5,7 +5,7 @@
     "details": {
         "intro": {
             "text": "intro.md",
-            "foreground": "/tools/all-setup.sh"
+            "foreground": "tools/all-setup.sh"
         },
         "steps": [
             {
@@ -17,16 +17,9 @@
         "assets": {
             "host01": [
                 {
-                    "file": "hosts",
-                    "target": "~/"
-                },
-                {
-                    "file": "template.yml",
-                    "target": "/answers"
-                },
-                {
-                    "file": "template.j2",
-                    "target": "/answers"
+                    "file": "tools/*",
+                    "target": "~/",
+                    "chmod": "+x"
                 }
             ]
         },

@@ -1,0 +1,27 @@
+version: '3'
+services:
+  lb:
+    build:
+      context: .
+      dockerfile: ./server.Dockerfile
+    ports: 
+      - 8080:80
+    networks:
+      - lb
+
+  web:
+    build:
+      context: .
+      dockerfile: ./server.Dockerfile
+    deploy:
+      replicas: 5
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+    networks:
+      - lb
+
+networks:
+  lb:
+    driver: bridge

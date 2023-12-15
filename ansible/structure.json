@@ -2,6 +2,6 @@
     "title": "Ansible project for beginners",
     "Description": "This is a sample project for beginners to learn Ansible.",
     "items": [
-        {"path": "ansible" }
+        {"path": "00-understanding-infrastructure" }
     ]
 }

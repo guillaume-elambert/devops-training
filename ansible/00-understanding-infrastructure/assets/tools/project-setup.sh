@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mkdir -p /root/ansible-training && cd /root/ansible-training
+docker-compose -f "/root/ansible-training/docker-compose.yml" --compatibility up -d

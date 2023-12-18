@@ -13,17 +13,23 @@ This project will provide valuable insights into the setup and management of a l
 
 Visual aids or images can be particularly helpful in further understanding this infrastructure.
 
-<br>
-
-<p align="center"><strong><ins>Infrastructure created with <code>docker compose</code></ins></strong></p>
-<img src="https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt1.svg" alt="Infrastructure created with docker compose" title="Infrastructure created with docker compose" style="width:100%;"/>
-
-<br>
-
-<p align="center"><strong><ins>Deploying applications using <code>Ansible</code></ins></strong></p>
-<img src="https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt2.svg" alt="Application deployement using Ansible"  title="Application deployement using Ansible" style="width:100%;"/>
-
-<br>
-
-<p align="center"><strong><ins>Use of infrastructure</ins></strong></p>
-<img src="https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt3.svg" alt="Use of infrastructure" title="Use of infrastructure" style="width:100%;"/>
+<table>
+    <tr>
+        <td align="center">
+            <strong><ins>Infrastructure created with <code>docker compose</code></ins></strong>
+            <img src="https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt1.svg" alt="Infrastructure created with docker compose" title="Infrastructure created with docker compose" style="width:100%;"/>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <strong><ins>Deploying applications using <code>Ansible</code></ins></strong>
+            <img src="https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt2.svg" alt="Application deployement using Ansible"  title="Application deployement using Ansible" style="width:100%;"/>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <strong><ins>Use of infrastructure</ins></strong>
+            <img src="https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt3.svg" alt="Use of infrastructure" title="Use of infrastructure" style="width:100%;"/>
+        </td>
+    </tr>
+</table>

@@ -8,7 +8,7 @@ UNDERLINE=$(tput smul)
 # Wait until there is no /tmp/tools/*-setup.lock file
 while [ -f /tmp/tools/*-setup.lock ];do 
     for s in / - \\ \|; do 
-        printf "%s\r" "${YELLOW}${s} Waiting for all the setup scripts to finish${NORMAL}"
+        printf "%s\r" "${YELLOW}${s} Waiting for all the setup scripts to finish...${NORMAL}"
         sleep 1
     done
 done

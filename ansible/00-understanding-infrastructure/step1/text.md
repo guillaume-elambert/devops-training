@@ -13,9 +13,20 @@ This project will provide valuable insights into the setup and management of a l
 
 Visual aids or images can be particularly helpful in further understanding this infrastructure.
 
-|                                                                                                            Architecture diagrams                                                                                                             |
-| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| **<ins>Infrastructure created with `docker compose`</ins>** \ ![Infrastructure created with docker compose](https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt1.svg "Infrastructure created with docker compose") |
-|         **<ins>Deploying applications using `Ansible`</ins>** \ ![Application deployement using Ansible](https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt2.svg "Application deployement using Ansible")         |
-|                                  **<ins>Use of infrastructure</ins>** ![Use of infrastructure](https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt3.svg "Use of infrastructure")                                   |
+<br>
 
+**<ins>Infrastructure created with `docker compose` :</ins>**
+
+![Infrastructure created with docker compose](https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt1.svg "Infrastructure created with docker compose")
+
+<br>
+
+**<ins>Deploying applications using `Ansible` :</ins>**
+
+![Application deployement using Ansible](https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt2.svg "Application deployement using Ansible")
+
+<br>
+
+**<ins>Use of infrastructure :</ins>**
+
+![Use of infrastructure](https://elambert-guillau.me/devops-training/_assets/media/ansible-training-pt3.svg "Use of infrastructure")

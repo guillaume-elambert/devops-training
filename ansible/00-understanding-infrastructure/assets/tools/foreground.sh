@@ -1,4 +1,6 @@
 #!/bin/bash
+trap '' SIGINT
+
 NORMAL=$(tput sgr0)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
@@ -12,4 +14,7 @@ while [ -f /tmp/tools/*-setup.lock ];do
         sleep 1
     done
 done
+
 printf "%s\r\n" "${GREEN}All setup scripts have finished. You can now enjoy the infrastructure.${NORMAL}"
+
+trap SIGINT

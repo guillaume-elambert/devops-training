@@ -11,9 +11,9 @@ for script in $(ls -1 /tmp/tools/*-setup.sh | grep -v all-setup.sh); do
     script_name=$(echo $script | sed 's/\(.*\)\..*/\1/')
 
     # Touch the script name to create the lock file
-    touch /tmp/$script_name.lock
+    touch $script_name.lock
 
     # Run the script then remove the lock file
-    sudo bash $script && rm /tmp/$script_name.lock
+    sudo bash $script && rm $script_name.lock
 done
 

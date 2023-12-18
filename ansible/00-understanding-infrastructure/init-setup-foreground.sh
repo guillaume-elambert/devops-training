@@ -1,2 +1,2 @@
 #!/bin/bash
-chmod +x /tmp/foreground.sh && ./tmp/foreground.sh
+chmod +x /tmp/tools/foreground.sh && ./tmp/tools/foreground.sh

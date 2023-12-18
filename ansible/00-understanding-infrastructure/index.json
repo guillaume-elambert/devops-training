@@ -22,8 +22,8 @@
                     "target": "/tmp"
                 },
                 {
-                    "file": "docker-infra/*",
-                    "target": "/root/ansible-training"
+                    "file": "ansible-training/*",
+                    "target": "/root"
                 }
             ]
         },

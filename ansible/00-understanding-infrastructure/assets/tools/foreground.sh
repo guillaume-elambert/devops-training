@@ -13,11 +13,11 @@ tput civis
 # Wait until there is no /tmp/tools/*-setup.lock file
 while [ -f /tmp/tools/*-setup.lock ];do 
     for s in ▖ ▘ ▝ ▗; do 
-        printf "\r%s" "${YELLOW}${s}\t Waiting for all the setup scripts to finish...${NORMAL}"
+        printf "\r%s" "${YELLOW}${s}  Waiting for all the setup scripts to finish...${NORMAL}"
         sleep 0.25
     done
 done
 
-printf "%s\r\n" "${GREEN}All setup scripts have finished. You can now enjoy the infrastructure.${NORMAL}"
+printf "\r%s\n" "${GREEN}All setup scripts have finished. You can now enjoy the infrastructure.${NORMAL}"
 
 trap SIGINT

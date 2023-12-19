@@ -24,7 +24,7 @@
             "host01": [
                 {
                     "file": "tools/*",
-                    "target": "/tmp"
+                    "target": "/root"
                 },
                 {
                     "file": "ansible-training/*",

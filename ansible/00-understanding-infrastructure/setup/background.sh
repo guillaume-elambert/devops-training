@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Get all the /tmp/tools/*-setup.sh (except all-setup.sh) scripts in the current directory
+# Get all the /root/tools/*-setup.sh (except all-setup.sh) scripts in the current directory
 # and run them.
-for script in $(ls -1 /tmp/tools/*-setup.sh | grep -v all-setup.sh); do
+for script in $(ls -1 /root/tools/*-setup.sh | grep -v all-setup.sh); do
     # Make the script executable
     chmod +x $script
     

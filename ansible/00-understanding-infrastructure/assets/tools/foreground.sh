@@ -8,9 +8,9 @@ GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
 UNDERLINE=$(tput smul)
 
-# Get all the /tmp/tools/*-setup.sh (except all-setup.sh) scripts in the current directory
-# Wait until there is no /tmp/tools/*-setup.lock file
-while [ -f /tmp/tools/*-setup.lock ];do 
+# Get all the /root/tools/*-setup.sh (except all-setup.sh) scripts in the current directory
+# Wait until there is no /root/tools/*-setup.lock file
+while [ -f /root/tools/*-setup.lock ];do 
     had_lock=true
 
     for s in ▖ ▘ ▝ ▗; do 

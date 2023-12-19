@@ -1,5 +1,7 @@
-# Make /tmp/tools/foreground.sh executable
-# Force new terminal to run /tmp/tools/foreground.sh
+# Make /root/tools/foreground.sh executable
+# Force new terminal to run /root/tools/foreground.sh
+# Run /root/tools/foreground.sh
 clear && \
-chmod +x /tmp/tools/foreground.sh && \
-echo /tmp/tools/foreground.sh >> ~/.bashrc
+chmod +x /root/tools/foreground.sh && \
+echo /root/tools/foreground.sh >> ~/.bashrc && \
+/root/tools/foreground.sh

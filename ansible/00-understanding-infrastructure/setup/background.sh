@@ -13,5 +13,5 @@ for script in $(ls -1 /root/tools/*-setup.sh | grep -v all-setup.sh); do
     touch $script_name.lock
 
     # Run the script then remove the lock file
-    sudo bash $script && rm $script_name.lock
+    sudo bash $script; rm $script_name.lock
 done

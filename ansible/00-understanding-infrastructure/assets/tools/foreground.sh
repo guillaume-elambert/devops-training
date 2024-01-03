@@ -15,13 +15,12 @@ while [ -f /root/tools/*-setup.lock ];do
 
     for s in ▖ ▘ ▝ ▗; do 
         printf "\r%s\r" "${YELLOW}${s}  Waiting for all the setup scripts to finish...${NORMAL}"
-        # remove any char that might be after the pritf above
         sleep 0.25
     done
 done
 
 if [ "$had_lock" = true ]; then
-    printf "\r%s\r\n" "${GREEN}All setup scripts have finished. You can now enjoy the infrastructure.${NORMAL}"
+    printf "\r%s\r\n" "${GREEN}All setup scripts have finished. You can now enjoy the infrastructure!${NORMAL}"
 fi
 
 trap SIGINT

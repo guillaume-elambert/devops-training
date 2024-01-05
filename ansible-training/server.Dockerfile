@@ -22,4 +22,4 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 RUN mkdir -p /run/sshd
 RUN mkdir ~/.ssh && chmod 700 ~/.ssh
 
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["service", "ssh", "restart", "-D"]

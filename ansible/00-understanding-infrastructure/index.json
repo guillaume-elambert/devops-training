@@ -23,11 +23,12 @@
         "assets": {
             "host01": [
                 {
-                    "file": "tools/*",
-                    "target": "/root"
+                    "file": "tools/**/*.*",
+                    "target": "/root",
+                    "chmod": "+x"
                 },
                 {
-                    "file": "ansible-training/*",
+                    "file": "ansible-training/**/*.*",
                     "target": "/root"
                 }
             ]

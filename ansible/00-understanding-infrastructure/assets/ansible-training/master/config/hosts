@@ -1,0 +1,13 @@
+[lb]
+ansible-training_lb_1
+
+[web]
+ansible-training_web_1
+ansible-training_web_2
+ansible-training_web_3
+ansible-training_web_4
+ansible-training_web_5
+
+[all:children]
+web
+lb

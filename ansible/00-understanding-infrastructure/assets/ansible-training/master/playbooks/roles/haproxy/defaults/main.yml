@@ -1,0 +1,5 @@
+---
+# defaults file for ./roles/haproxy
+
+# The port used by HAProxy
+haproxy_port: 80

@@ -1,0 +1,6 @@
+---
+# defaults file for common
+
+# The user and password to use when connecting through SSH
+ansible_ssh_user: root
+ansible_ssh_pass: ansible

@@ -1,0 +1,22 @@
+---
+# tasks file for ./roles/nginx
+
+- name: Install NGINX
+  become: yes
+  apt:
+    update_cache: true
+    name: nginx
+    state: present
+
+- name: Copy NGINX config files
+  copy:
+    src: files/config/
+    dest: /etc/nginx/
+    force: true
+    
+- name: Making index.html file
+  template:
+    src: templates/index.html.j2
+    dest: /var/www/html/index.html
+  notify:
+    - Restart Nginx

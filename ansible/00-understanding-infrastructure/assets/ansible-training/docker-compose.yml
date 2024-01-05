@@ -4,11 +4,6 @@ services:
     build:
       context: .
       dockerfile: ./server.Dockerfile
-    entrypoint: 
-      - /bin/sh
-      - -c
-      - |
-        tail -f /dev/null
     ports: 
       - 8080:80
     networks:
@@ -18,11 +13,6 @@ services:
     build:
       context: .
       dockerfile: ./server.Dockerfile
-    entrypoint: 
-      - /bin/sh
-      - -c
-      - |
-        tail -f /dev/null
     deploy:
       replicas: 5
       restart_policy:

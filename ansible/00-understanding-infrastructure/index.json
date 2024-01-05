@@ -23,7 +23,7 @@
         "assets": {
             "host01": [
                 {
-                    "file": "*",
+                    "file": "**",
                     "target": "/root"
                 }
             ]

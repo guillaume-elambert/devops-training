@@ -6,3 +6,6 @@ if ! [ -x "$(command -v docker)" ]; then
   sudo sh ./get-docker.sh
   rm get-docker.sh
 fi
+
+
+docker load -i $TOOLS_PATH/01-docker-setup/docker-ubuntu2204-ansible.tar.gz

@@ -13,11 +13,15 @@ check_commands_status() {
         if [ $status -eq 0 ]; then
             echo "The command with PID $pid finished successfully."
         else
-            echo "Error: The command with PID $pid failed to run (exit code: $status)."
+            # Output to stderr
+            echo "Error: The command with PID $pid failed to run (exit code: $status)." >&2
             exit $status
         fi
     done
 }
+
+# Compare sh256 digest of file docker-ubuntu2204-ansible.tar.xz
+
 
 
 # Get the path of this file
